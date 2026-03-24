@@ -7,7 +7,7 @@ import special from "../assets/special.png";
 import gallery from "../assets/gallery.png";
 import facility from "../assets/facility.png";
 
-function MenuCard({ image, title, lines = [] }) {
+function MenuCard({ image, title, lines = [], onView }) {
   return (
     <div className="menu-card">
       <img src={image} alt={title} className="menu-card-image" />
@@ -20,13 +20,15 @@ function MenuCard({ image, title, lines = [] }) {
           <p key={index}>{line}</p>
         ))}
 
-        <button type="button">View</button>
+        <button type="button" onClick={onView}>
+          View
+        </button>
       </div>
     </div>
   );
 }
 
-function Menu({ onClose }) {
+function Menu({ onClose, onRoomsClick, onDineClick, onGalleryClick }) {
   return (
     <div className="menu-page">
       <nav className="menu-topbar">
@@ -55,21 +57,28 @@ function Menu({ onClose }) {
             image={rooms}
             title="Rooms"
             lines={["super deluxe", "deluxe", "standard"]}
+            onView={onRoomsClick}
           />
 
-          <MenuCard image={meeting} title="Meetings" />
+          <MenuCard image={meeting} title="Meetings" onView={() => {}} />
 
           <MenuCard
             image={dine}
             title="Dine & Drink"
             lines={["Palmyrah", "restaurant", "& bar"]}
+            onView={onDineClick}
+          />
+          
+
+          <MenuCard
+            image={special}
+            title="Special Occasion"
+            onView={() => {}}
           />
 
-          <MenuCard image={special} title="Special Occasion" />
+          <MenuCard image={gallery} title="Gallery" onView={onGalleryClick} />
 
-          <MenuCard image={gallery} title="Gallery" />
-
-          <MenuCard image={facility} title="Facilities" />
+          <MenuCard image={facility} title="Facilities" onView={() => {}} />
         </div>
       </section>
     </div>

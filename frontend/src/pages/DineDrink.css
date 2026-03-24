@@ -1,0 +1,395 @@
+* {
+  box-sizing: border-box;
+}
+
+.dine-page {
+  width: 100%;
+  background: #f4f3ef;
+  color: #111;
+  overflow-x: hidden;
+}
+
+/* hero */
+.dine-hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.dine-hero-bg {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  display: block;
+}
+
+.dine-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.08),
+    rgba(0, 0, 0, 0.14),
+    rgba(0, 0, 0, 0.32)
+  );
+}
+
+.dine-top-bar {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 3;
+}
+
+.dine-logo {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+}
+
+.dine-menu-btn {
+  width: 36px;
+  height: 36px;
+  background: #d1ac2f;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.dine-menu-btn:hover {
+  background: #bc9921;
+  transform: scale(1.05);
+}
+
+.dine-hero-content {
+  position: absolute;
+  top: 20%;
+  left: 3.5%;
+  z-index: 3;
+  color: #fff;
+  animation: dineHeroFade 0.9s ease;
+}
+
+.dine-hero-content h1 {
+  margin: 0;
+  font-size: clamp(3rem, 6vw, 5.4rem);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+}
+
+.dine-booking-bar {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(86%, 900px);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.1fr;
+  z-index: 4;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dine-booking-item,
+.dine-book-now-btn {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.95rem;
+}
+
+.dine-booking-item {
+  background: #fff;
+  border-right: 1px solid #ddd;
+}
+
+.dine-book-now-btn {
+  border: none;
+  background: #cda92f;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dine-book-now-btn:hover {
+  background: #b8951f;
+}
+
+/* main content */
+.dine-content {
+  background: #f5f4ef;
+  padding: 64px 52px 0;
+}
+
+.dine-info-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 56px;
+  align-items: center;
+  margin-bottom: 48px;
+}
+
+.dine-info-image-wrap {
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.dine-info-image {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.dine-info-image:hover {
+  transform: scale(1.03);
+}
+
+.dine-info-text {
+  text-align: center;
+}
+
+.dine-info-text h2 {
+  margin: 0 0 18px;
+  font-size: 2.3rem;
+  font-weight: 500;
+}
+
+.dine-info-text p {
+  margin: 0 auto;
+  max-width: 430px;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+  font-size: 0.98rem;
+  color: #333;
+}
+
+/* split banner */
+.dine-split-banner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-bottom: 40px;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.split-card {
+  position: relative;
+  height: 370px;
+  overflow: hidden;
+}
+
+.split-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.55s ease;
+}
+
+.split-card:hover img {
+  transform: scale(1.04);
+}
+
+.split-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.12),
+    rgba(0, 0, 0, 0.22),
+    rgba(0, 0, 0, 0.32)
+  );
+}
+
+.split-title {
+  position: absolute;
+  z-index: 2;
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 400;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.28);
+}
+
+.left-title {
+  left: 20%;
+  top: 52%;
+  transform: translate(-20%, -50%);
+}
+
+.right-title {
+  right: 12%;
+  top: 52%;
+  width: 320px;
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+/* middle paragraph */
+.dine-paragraph-block {
+  background: #fff;
+  padding: 38px 70px;
+  margin-bottom: 0;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+}
+
+.dine-paragraph-block p {
+  margin: 0 auto;
+  max-width: 900px;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.7;
+  font-size: 0.96rem;
+  color: #333;
+}
+
+/* bottom grid */
+.dine-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 0.45fr 1fr;
+  align-items: stretch;
+}
+
+.bottom-image {
+  overflow: hidden;
+}
+
+.bottom-image img {
+  width: 100%;
+  height: 370px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.bottom-image img:hover {
+  transform: scale(1.03);
+}
+
+.bottom-center-text {
+  background: linear-gradient(180deg, #bba390 0%, #a88d79 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.bottom-center-text h2 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #111;
+}
+
+/* footer */
+.dine-footer {
+  background: #000;
+  color: #fff;
+  padding: 38px 30px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  gap: 28px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.dine-footer-logo {
+  width: 62px;
+  margin-bottom: 14px;
+}
+
+.dine-footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dine-footer-col li {
+  line-height: 1.85;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+/* responsive */
+@media (max-width: 1100px) {
+  .dine-info-row {
+    grid-template-columns: 1fr;
+  }
+
+  .dine-footer {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .dine-content {
+    padding: 40px 20px 0;
+  }
+
+  .dine-booking-bar {
+    width: 92%;
+    grid-template-columns: 1fr;
+  }
+
+  .dine-split-banner,
+  .dine-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .split-card,
+  .bottom-image img,
+  .dine-info-image {
+    height: 260px;
+  }
+
+  .dine-paragraph-block {
+    padding: 24px 20px;
+  }
+
+  .dine-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .dine-hero-content h1 {
+    font-size: 2.8rem;
+  }
+
+  .right-title {
+    width: 240px;
+    right: 50%;
+    transform: translate(50%, -50%);
+  }
+
+  .bottom-center-text {
+    min-height: 180px;
+  }
+
+  .bottom-center-text h2 {
+    font-size: 1.7rem;
+  }
+}
+
+@keyframes dineHeroFade {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
