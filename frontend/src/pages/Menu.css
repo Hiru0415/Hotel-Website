@@ -11,6 +11,9 @@ body {
 .menu-page {
   min-height: 100vh;
   background: #f3f1eb;
+  display: flex;
+  flex-direction: column;
+  animation: menuFadeIn 0.35s ease;
 }
 
 /* top navbar */
@@ -121,7 +124,7 @@ body {
 }
 
 .menu-card-content h2 {
-  margin: 0 5 10px;
+  margin: 0 0 10px;
   font-size: 32px;
   line-height: 1.05;
   font-weight: 400;
@@ -150,14 +153,6 @@ body {
 .menu-card-content button:hover {
   background: #d4af37;
   transform: translateY(-1px);
-}
-
-.menu-page {
-  min-height: 100vh;
-  background: #f3f1eb;
-  display: flex;
-  flex-direction: column;
-  animation: menuFadeIn 0.35s ease;
 }
 
 @keyframes menuFadeIn {

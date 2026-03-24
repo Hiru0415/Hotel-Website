@@ -1,0 +1,266 @@
+* {
+  box-sizing: border-box;
+}
+
+.rooms-page {
+  width: 100%;
+  background: #f4f3ef;
+  color: #111;
+  overflow-x: hidden;
+}
+
+.rooms-hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.rooms-hero-bg {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  display: block;
+}
+
+.rooms-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.12),
+    rgba(0, 0, 0, 0.18),
+    rgba(0, 0, 0, 0.35)
+  );
+}
+
+.rooms-top-bar {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 3;
+}
+
+.rooms-logo {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+}
+
+.rooms-menu-btn {
+  background: #d1ac2f;
+  border: none;
+  width: 34px;
+  height: 34px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.rooms-hero-content {
+  position: absolute;
+  top: 22%;
+  left: 4%;
+  z-index: 3;
+  color: #fff;
+}
+
+.rooms-hero-content h1 {
+  margin: 0;
+  font-size: clamp(3rem, 6vw, 5.2rem);
+  font-weight: 500;
+}
+
+.rooms-booking-bar {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(86%, 900px);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.1fr;
+  z-index: 4;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.rooms-booking-item,
+.rooms-book-now-btn {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.95rem;
+}
+
+.rooms-booking-item {
+  background: #fff;
+  border-right: 1px solid #ddd;
+}
+
+.rooms-book-now-btn {
+  border: none;
+  background: #cda92f;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.rooms-content {
+  background: #f5f4ef;
+  padding: 56px 52px 70px;
+}
+
+.room-info-card {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
+  margin-bottom: 44px;
+}
+
+.room-info-image-wrap {
+  width: 100%;
+}
+
+.room-info-image {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  display: block;
+}
+
+.room-info-text {
+  text-align: center;
+}
+
+.room-info-text h2 {
+  font-size: 2.2rem;
+  margin: 0 0 16px;
+  font-weight: 500;
+}
+
+.room-info-text p {
+  margin: 0 auto 18px;
+  max-width: 500px;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.45;
+  font-size: 0.98rem;
+}
+
+.room-info-text button {
+  border: none;
+  background: #cda92f;
+  padding: 12px 28px;
+  border-radius: 22px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.amenities-section {
+  margin-top: 36px;
+}
+
+.amenities-section h2 {
+  margin: 0 0 28px;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px 22px;
+}
+
+.amenity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.amenity-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e3e3e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.amenity-item span {
+  font-size: 0.95rem;
+}
+
+.rooms-footer {
+  background: #000;
+  color: #fff;
+  padding: 34px 30px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  gap: 28px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.rooms-footer-logo {
+  width: 62px;
+  margin-bottom: 14px;
+}
+
+.rooms-footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rooms-footer-col li {
+  line-height: 1.8;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+@media (max-width: 1100px) {
+  .room-info-card {
+    grid-template-columns: 1fr;
+  }
+
+  .amenities-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .rooms-footer {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .rooms-content {
+    padding: 40px 20px 54px;
+  }
+
+  .rooms-booking-bar {
+    width: 92%;
+    grid-template-columns: 1fr;
+  }
+
+  .room-info-image {
+    height: 260px;
+  }
+
+  .amenities-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .rooms-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .rooms-hero-content h1 {
+    font-size: 2.7rem;
+  }
+}

@@ -5,6 +5,7 @@ function SectionCard({
   light = false,
   reverse = false,
   smallText = false,
+  onButtonClick,
 }) {
   return (
     <section className={`section-card ${light ? "light" : "dark"} ${reverse ? "reverse" : ""}`}>
@@ -15,7 +16,9 @@ function SectionCard({
 
       <div className={`section-content ${smallText ? "small-text" : ""}`}>
         <h2>{title}</h2>
-        <button>{buttonText}</button>
+        <button type="button" onClick={onButtonClick}>
+          {buttonText}
+        </button>
       </div>
     </section>
   );
