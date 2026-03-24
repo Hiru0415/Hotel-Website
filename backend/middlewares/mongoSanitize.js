@@ -2,18 +2,18 @@
 // Prevents NoSQL injection and XSS attacks
 
 const sanitize = (obj) => {
-  if (obj && typeof obj === 'object') {
+  if (obj && typeof obj === "object") {
     for (const key in obj) {
       // Remove keys with $ or . to prevent NoSQL injection
-      if (key.includes('$') || key.includes('.')) {
+      if (key.includes("$") || key.includes(".")) {
         delete obj[key];
-      } else if (typeof obj[key] === 'string') {
+      } else if (typeof obj[key] === "string") {
         // XSS protection: Remove script tags and dangerous HTML
         obj[key] = obj[key]
-          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-          .replace(/javascript:/gi, '')
-          .replace(/on\w+\s*=/gi, ''); // Remove event handlers like onclick=
-      } else if (typeof obj[key] === 'object') {
+          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+          .replace(/javascript:/gi, "")
+          .replace(/on\w+\s*=/gi, ""); // Remove event handlers like onclick=
+      } else if (typeof obj[key] === "object") {
         sanitize(obj[key]);
       }
     }
@@ -34,7 +34,7 @@ const securityMiddleware = (req, res, next) => {
     }
 
     // Sanitize query (Express v5 compatible)
-    if (req.query && typeof req.query === 'object') {
+    if (req.query && typeof req.query === "object") {
       const queryObj = { ...req.query };
       const sanitized = sanitize(queryObj);
 
