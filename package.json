@@ -17,5 +17,11 @@
   "bugs": {
     "url": "https://github.com/dinith114/Hotel-Website/issues"
   },
-  "homepage": "https://github.com/dinith114/Hotel-Website#readme"
+  "homepage": "https://github.com/dinith114/Hotel-Website#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.3.1"
+  }
 }
