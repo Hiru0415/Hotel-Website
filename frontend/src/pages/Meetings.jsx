@@ -71,18 +71,7 @@ function Meetings({ onBackToMenu, onBookingClick }) {
           <h1>Meetings</h1>
         </div>
 
-        <div className="meetings-booking-bar">
-          <div className="meetings-booking-item">📅 CHECK IN</div>
-          <div className="meetings-booking-item">📅 CHECK OUT</div>
-          <div className="meetings-booking-item">👥 GUESTS</div>
-          <button
-            className="meetings-book-now-btn"
-            type="button"
-            onClick={onBookingClick}
-          >
-            BOOK NOW
-          </button>
-        </div>
+    
       </section>
 
       <section className="meetings-content">
