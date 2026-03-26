@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { api } from "../api/api";
 import "./Rooms.css";
+import Footer from "../components/Footer";
 
 import logo from "../assets/logo.png";
 import heroRoom from "../assets/rooms.png";
@@ -73,11 +75,23 @@ function AmenityItem({ text }) {
   );
 }
 
-function Rooms({ onBackToMenu, onBookingClick, searchDefaults }) {
-  const [checkIn, setCheckIn] = useState(searchDefaults?.checkIn || "");
-  const [checkOut, setCheckOut] = useState(searchDefaults?.checkOut || "");
-  const [guests, setGuests] = useState(searchDefaults?.guests || 1);
+function Rooms() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchDefaults = location.state || {};
+  const [checkIn, setCheckIn] = useState(searchDefaults.checkIn || "");
+  const [checkOut, setCheckOut] = useState(searchDefaults.checkOut || "");
+  const [guests, setGuests] = useState(searchDefaults.guests || 1);
   const [availability, setAvailability] = useState([]);
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const getTomorrow = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().split("T")[0];
+  };
 
   useEffect(() => {
     if (searchDefaults) {
@@ -100,16 +114,17 @@ function Rooms({ onBackToMenu, onBookingClick, searchDefaults }) {
           console.error("Failed to fetch availability:", error);
         }
       } else {
-        setAvailability([]); // Reset if dates are incomplete
+        setAvailability([]);
       }
     };
     fetchAvailability();
   }, [checkIn, checkOut]);
 
   const handleRoomBookClick = (roomTypeTitle) => {
-    // Strip out the word " Room" to match the DB schema for accurate availability counting
     const cleanRoomType = roomTypeTitle.replace(" Room", "");
-    onBookingClick({ roomType: cleanRoomType, checkIn, checkOut, guests });
+    navigate("/booking", {
+      state: { roomType: cleanRoomType, checkIn, checkOut, guests },
+    });
   };
 
   const getAvailableCount = (roomType) => {
@@ -117,6 +132,7 @@ function Rooms({ onBackToMenu, onBookingClick, searchDefaults }) {
     const roomInfo = availability.find((r) => r.roomType === roomType);
     return roomInfo ? roomInfo.availableRooms : undefined;
   };
+
   const roomDescription =
     "Combining elegant decor with modern amenities, all our rooms feature free Wi-Fi, satellite TV and 24-hour room service. Relax in our contemporary ambience and enjoy spectacular Indian Ocean sunsets from our ocean view rooms. Interconnecting family rooms and disabled accessible rooms are available. Choose from our Super Deluxe, Deluxe and Standard room selections for your stay. A ground floor smoking lounge is available for your convenience.";
 
@@ -128,11 +144,10 @@ function Rooms({ onBackToMenu, onBookingClick, searchDefaults }) {
 
         <header className="rooms-top-bar">
           <img src={logo} alt="Logo" className="rooms-logo" />
-
           <button
             className="rooms-menu-btn"
             aria-label="Back to menu"
-            onClick={onBackToMenu}
+            onClick={() => navigate("/menu")}
             type="button"
           >
             &#9776;
@@ -165,8 +180,16 @@ function Rooms({ onBackToMenu, onBookingClick, searchDefaults }) {
             </span>
             <input
               type="date"
+              min={today}
               value={checkIn}
-              onChange={(e) => setCheckIn(e.target.value)}
+              onChange={(e) => {
+                const newCheckIn = e.target.value;
+                setCheckIn(newCheckIn);
+
+                if (checkOut && checkOut <= newCheckIn) {
+                  setCheckOut("");
+                }
+              }}
               style={{
                 padding: "0",
                 border: "none",
@@ -180,6 +203,7 @@ function Rooms({ onBackToMenu, onBookingClick, searchDefaults }) {
               }}
             />
           </div>
+
           <div
             className="rooms-booking-item"
             style={{
@@ -201,6 +225,7 @@ function Rooms({ onBackToMenu, onBookingClick, searchDefaults }) {
             </span>
             <input
               type="date"
+              min={checkIn ? getTomorrow(checkIn) : today}
               value={checkOut}
               onChange={(e) => setCheckOut(e.target.value)}
               style={{
@@ -216,6 +241,7 @@ function Rooms({ onBackToMenu, onBookingClick, searchDefaults }) {
               }}
             />
           </div>
+
           <div
             className="rooms-booking-item"
             style={{
@@ -304,57 +330,7 @@ function Rooms({ onBackToMenu, onBookingClick, searchDefaults }) {
         </section>
       </section>
 
-      <footer className="rooms-footer">
-        <div className="rooms-footer-col rooms-footer-brand">
-          <img src={logo} alt="Logo" className="rooms-footer-logo" />
-          <ul>
-            <li>Cookie Policy</li>
-            <li>Privacy Policy</li>
-            <li>Sitemap</li>
-            <li>Powered by SLK</li>
-            <li>Copyright © 2023 Renuka City Hotel</li>
-          </ul>
-        </div>
-
-        <div className="rooms-footer-col">
-          <ul>
-            <li>home</li>
-            <li>rooms</li>
-            <li>• super deluxe room</li>
-            <li>• deluxe room</li>
-            <li>• standard room</li>
-            <li>dine & drink</li>
-            <li>• Palmyrah restaurant & bar</li>
-            <li>gallery</li>
-          </ul>
-        </div>
-
-        <div className="rooms-footer-col">
-          <ul>
-            <li>meetings</li>
-            <li>special occasions</li>
-            <li>facilities</li>
-            <li>Colombo</li>
-            <li>offers</li>
-            <li>our story</li>
-            <li>careers</li>
-            <li>blogs</li>
-            <li>privacy policy</li>
-            <li>contact us</li>
-          </ul>
-        </div>
-
-        <div className="rooms-footer-col">
-          <ul>
-            <li>328 Galle Road Colombo 3 Sri Lanka</li>
-            <li>+94-112573598/602</li>
-            <li>+94-112573145/8</li>
-            <li>+94-112574137</li>
-            <li>+94-112576183</li>
-            <li>renukah@renukahotel.com</li>
-          </ul>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

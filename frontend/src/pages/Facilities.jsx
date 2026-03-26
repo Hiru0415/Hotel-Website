@@ -3,6 +3,7 @@ import "../components/CommonLayout.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import hero from "../assets/renuka2.png";
+import { useNavigate } from "react-router-dom";
 
 function FacilityItem({ icon, text }) {
   return (
@@ -14,6 +15,7 @@ function FacilityItem({ icon, text }) {
 }
 
 function Facilities({ onBackToMenu, onBookingClick }) {
+  const navigate = useNavigate();
   const hotelFacilities = [
     { icon: "🛏", text: "99 rooms" },
     { icon: "📺", text: "Satellite Television" },
@@ -71,7 +73,7 @@ function Facilities({ onBackToMenu, onBookingClick }) {
         <img src={hero} alt="Facility" className="facilities-hero-bg" />
         <div className="facilities-hero-overlay" />
 
-        <Header onMenuClick={onBackToMenu} />
+        <Header onMenuClick={() => navigate("/menu")} />
 
         <div className="facilities-hero-content">
           <h1>Facility</h1>

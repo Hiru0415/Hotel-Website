@@ -1,4 +1,5 @@
 import "./Colombo.css";
+import { useNavigate } from "react-router-dom";
 
 import logo from "../assets/logo.png";
 import hero from "../assets/colo.png";
@@ -19,6 +20,7 @@ function ColomboCard({ image, title }) {
 }
 
 function Colombo({ onBackToMenu, onBookingClick }) {
+  const navigate = useNavigate();
   return (
     <div className="colombo-page">
       <section className="colombo-hero">
@@ -31,7 +33,7 @@ function Colombo({ onBackToMenu, onBookingClick }) {
           <button
             className="colombo-menu-btn"
             aria-label="Back to menu"
-            onClick={onBackToMenu}
+            onClick={() => navigate("/menu")}
             type="button"
           >
             &#9776;

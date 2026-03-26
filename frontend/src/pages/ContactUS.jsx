@@ -2,8 +2,10 @@ import { useState } from "react";
 import { api } from "../api/api";
 import "./ContactUs.css";
 import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 function ContactUs({ onBackToMenu }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -56,7 +58,7 @@ function ContactUs({ onBackToMenu }) {
 
         <button
           className="contactus-menu-btn"
-          onClick={onBackToMenu}
+          onClick={() => navigate("/menu")}
           type="button"
           aria-label="Back to menu"
         >

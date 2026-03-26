@@ -1,0 +1,275 @@
+.offers-page {
+  background: #f7f7f7;
+  min-height: 100vh;
+}
+
+.offers-hero {
+  position: relative;
+  height: 70vh;
+  min-height: 500px;
+  overflow: hidden;
+}
+
+.offers-hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.offers-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.offers-top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  padding: 24px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.offers-logo {
+  width: 80px;
+  height: auto;
+}
+
+.offers-menu-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.offers-hero-content {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+  width: 90%;
+}
+
+.offers-hero-content p {
+  font-size: 16px;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.offers-hero-content h1 {
+  font-size: 56px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.offers-filter-section {
+  margin-top: -45px;
+  position: relative;
+  z-index: 3;
+  padding: 0 24px;
+}
+
+.offers-filter-bar {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.offers-filter-bar select {
+  flex: 1;
+  min-width: 220px;
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.offers-featured-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+.offers-reset-btn {
+  padding: 14px 22px;
+  border: none;
+  border-radius: 10px;
+  background: #777;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.offers-content {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 0 24px 60px;
+}
+
+.offers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.offer-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.offer-card:hover {
+  transform: translateY(-6px);
+}
+
+.offer-card-image,
+.offer-card-image-placeholder {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-weight: 600;
+}
+
+.offer-card-body {
+  padding: 22px;
+}
+
+.offer-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.offer-type {
+  font-size: 13px;
+  color: #0d2c54;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.offer-featured-badge {
+  font-size: 12px;
+  background: #f4c542;
+  color: #111;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+.offer-card h2 {
+  font-size: 22px;
+  margin: 0 0 12px;
+  color: #111;
+}
+
+.offer-card p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.7;
+  margin: 0 0 18px;
+}
+
+.offer-discount-box {
+  display: inline-block;
+  background: #0d2c54;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.offer-meta,
+.offer-code,
+.offer-rooms {
+  font-size: 13px;
+  color: #666;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+
+.offers-empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  font-size: 18px;
+  color: #666;
+}
+
+.offers-pagination {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  align-items: center;
+}
+
+.offers-pagination button {
+  padding: 12px 18px;
+  border: none;
+  background: #0d2c54;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.offers-pagination button:disabled {
+  background: #bbb;
+  cursor: not-allowed;
+}
+
+@media (max-width: 992px) {
+  .offers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .offers-hero-content h1 {
+    font-size: 42px;
+  }
+}
+
+@media (max-width: 640px) {
+  .offers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .offers-top-bar {
+    padding: 20px;
+  }
+
+  .offers-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .offers-hero-content h1 {
+    font-size: 34px;
+  }
+}

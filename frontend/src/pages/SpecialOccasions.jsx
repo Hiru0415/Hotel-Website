@@ -1,4 +1,6 @@
 import "./SpecialOccasions.css";
+import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 import logo from "../assets/logo.png";
 import hero from "../assets/flo.png";
@@ -21,7 +23,13 @@ function OccasionCard({ image, title }) {
   );
 }
 
-function SpecialOccasions({ onBackToMenu, onBookingClick, onEnquiryClick }) {
+function SpecialOccasions({ onBackToMenu, onBookingClick }) {
+  const navigate = useNavigate();
+
+  const handleEnquiryClick = () => {
+    navigate("/enquiry");
+  };
+
   return (
     <div className="special-page">
       <section className="special-hero">
@@ -34,7 +42,7 @@ function SpecialOccasions({ onBackToMenu, onBookingClick, onEnquiryClick }) {
           <button
             className="special-menu-btn"
             aria-label="Back to menu"
-            onClick={onBackToMenu}
+            onClick={() => navigate("/menu")}
             type="button"
           >
             &#9776;
@@ -45,7 +53,7 @@ function SpecialOccasions({ onBackToMenu, onBookingClick, onEnquiryClick }) {
           <h1>Special Occasions</h1>
         </div>
 
-        <div className="special-booking-bar">
+        {/* <div className="special-booking-bar">
           <div className="special-booking-item">📅 CHECK IN</div>
           <div className="special-booking-item">📅 CHECK OUT</div>
           <div className="special-booking-item">👥 GUESTS</div>
@@ -56,7 +64,7 @@ function SpecialOccasions({ onBackToMenu, onBookingClick, onEnquiryClick }) {
           >
             BOOK NOW
           </button>
-        </div>
+        </div> */}
       </section>
 
       <section className="special-content">
@@ -84,7 +92,11 @@ function SpecialOccasions({ onBackToMenu, onBookingClick, onEnquiryClick }) {
         <section className="banquet-section">
           <div className="banquet-left">
             <h2>Banqueting packages</h2>
-            <button type="button" className="banquet-enquiry-btn" onClick={onEnquiryClick}>
+            <button
+              type="button"
+              className="banquet-enquiry-btn"
+              onClick={handleEnquiryClick}
+            >
               Enquiry Form
             </button>
 
@@ -107,57 +119,7 @@ function SpecialOccasions({ onBackToMenu, onBookingClick, onEnquiryClick }) {
         </section>
       </section>
 
-      <footer className="special-footer">
-        <div className="special-footer-col special-footer-brand">
-          <img src={logo} alt="Logo" className="special-footer-logo" />
-          <ul>
-            <li>Cookie Policy</li>
-            <li>Privacy Policy</li>
-            <li>Sitemap</li>
-            <li>Powered by SLK</li>
-            <li>Copyright © 2023 Renuka City Hotel</li>
-          </ul>
-        </div>
-
-        <div className="special-footer-col">
-          <ul>
-            <li>home</li>
-            <li>rooms</li>
-            <li>• super deluxe room</li>
-            <li>• deluxe room</li>
-            <li>• standard room</li>
-            <li>dine & drink</li>
-            <li>• Palmyrah restaurant & bar</li>
-            <li>gallery</li>
-          </ul>
-        </div>
-
-        <div className="special-footer-col">
-          <ul>
-            <li>meetings</li>
-            <li>special occasions</li>
-            <li>facilities</li>
-            <li>Colombo</li>
-            <li>offers</li>
-            <li>our story</li>
-            <li>careers</li>
-            <li>blog</li>
-            <li>privacy policy</li>
-            <li>contact us</li>
-          </ul>
-        </div>
-
-        <div className="special-footer-col">
-          <ul>
-            <li>328 Galle Road Colombo 3 Sri Lanka</li>
-            <li>+94-112573598/602</li>
-            <li>+94-112573145/8</li>
-            <li>+94-112574137</li>
-            <li>+94-112576183</li>
-            <li>renukah@renukahotel.com</li>
-          </ul>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

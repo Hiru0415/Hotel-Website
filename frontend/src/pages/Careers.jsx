@@ -3,8 +3,10 @@ import { api } from "../api/api";
 import "./Careers.css";
 import logo from "../assets/logo.png";
 import hero from "../assets/career.png";
+import { useNavigate } from "react-router-dom";
 
 function Careers({ onBackToMenu, onBookingClick }) {
+  const navigate = useNavigate();
   const [careers, setCareers] = useState([]);
   const [careersLoading, setCareersLoading] = useState(true);
   const [careersError, setCareersError] = useState("");
@@ -190,7 +192,7 @@ function Careers({ onBackToMenu, onBookingClick }) {
           <button
             className="careers-menu-btn"
             aria-label="Back to menu"
-            onClick={onBackToMenu}
+            onClick={() => navigate("/menu")}
             type="button"
           >
             &#9776;

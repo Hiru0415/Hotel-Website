@@ -1,14 +1,30 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { api } from "../api/api";
 import "./Booking.css";
 import logo from "../assets/logo.png";
+import Footer from "../components/Footer";
 
-function Booking({ onBackToMenu, prefilledData }) {
+function Booking() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const prefilledData = location.state || {};
+
   const [popup, setPopup] = useState({
     show: false,
     message: "",
     type: "success",
   });
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const getTomorrow = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().split("T")[0];
+  };
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -32,6 +48,18 @@ function Booking({ onBackToMenu, prefilledData }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "checkInDate") {
+      setFormData((prev) => {
+        const updated = { ...prev, checkInDate: value };
+        if (updated.checkOutDate && updated.checkOutDate <= value) {
+          updated.checkOutDate = "";
+        }
+        return updated;
+      });
+      return;
+    }
+
     setFormData({ ...formData, [name]: value });
   };
 
@@ -44,6 +72,25 @@ function Booking({ onBackToMenu, prefilledData }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.checkInDate || !formData.checkOutDate) {
+      setPopup({
+        show: true,
+        message: "Please select both check-in and check-out dates.",
+        type: "error",
+      });
+      return;
+    }
+
+    if (formData.checkOutDate <= formData.checkInDate) {
+      setPopup({
+        show: true,
+        message: "Check-out date must be after check-in date.",
+        type: "error",
+      });
+      return;
+    }
+
     try {
       const response = await api.createBooking(formData);
       setPopup({
@@ -70,13 +117,13 @@ function Booking({ onBackToMenu, prefilledData }) {
           src={logo}
           alt="Logo"
           className="booking-logo"
-          onClick={onBackToMenu}
+          onClick={() => navigate("/menu")}
           style={{ cursor: "pointer" }}
           title="Back to Menu"
         />
         <button
           className="booking-menu-btn"
-          onClick={onBackToMenu}
+          onClick={() => navigate("/menu")}
           type="button"
         >
           &#9776;
@@ -172,6 +219,7 @@ function Booking({ onBackToMenu, prefilledData }) {
               <input
                 type="date"
                 name="checkInDate"
+                min={today}
                 value={formData.checkInDate}
                 onChange={handleChange}
                 required
@@ -183,6 +231,11 @@ function Booking({ onBackToMenu, prefilledData }) {
               <input
                 type="date"
                 name="checkOutDate"
+                min={
+                  formData.checkInDate
+                    ? getTomorrow(formData.checkInDate)
+                    : today
+                }
                 value={formData.checkOutDate}
                 onChange={handleChange}
                 required
@@ -271,14 +324,7 @@ function Booking({ onBackToMenu, prefilledData }) {
         </form>
       </main>
 
-      <footer className="booking-footer">
-        <div className="booking-footer-col booking-footer-brand">
-          <img src={logo} alt="Logo" className="booking-footer-logo" />
-          <ul>
-            <li>Copyright © 2023 Renuka City Hotel</li>
-          </ul>
-        </div>
-      </footer>
+      <Footer />
 
       {popup.show && (
         <div
@@ -328,8 +374,7 @@ function Booking({ onBackToMenu, prefilledData }) {
             <button
               onClick={() => {
                 setPopup({ show: false, message: "", type: "success" });
-                // Optional: If success, route the user back to the menu
-                if (popup.type === "success" && onBackToMenu) onBackToMenu();
+                if (popup.type === "success") navigate("/");
               }}
               style={{
                 padding: "12px 24px",
