@@ -66,9 +66,19 @@ function BlogDetails() {
           <div className="blog-details-empty">Blog post not found.</div>
         ) : (
           <div className="blog-details-card">
+            {blog.featuredImageUrl && (
+              <img
+                src={blog.featuredImageUrl}
+                alt={blog.title}
+                className="blog-details-featured-image"
+                onError={(e) => { e.target.style.display = "none"; }}
+              />
+            )}
             <div className="blog-details-meta">
               <span>
-                {blog.author?.name ? `By ${blog.author.name}` : "By Admin"}
+                {blog.authorName || blog.author?.name
+                  ? `By ${blog.authorName || blog.author.name}`
+                  : "By Admin"}
               </span>
               <span>
                 {blog.publishedAt

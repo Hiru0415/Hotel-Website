@@ -12,7 +12,7 @@ const {
 } = require("../controllers/blogController");
 const {
   getCategories,
-  getCategoryByIdOrSlug,
+  getCategoryById,
   createCategory,
   updateCategory,
   deleteCategory,
@@ -42,17 +42,9 @@ const categoryValidation = [
   body("name").notEmpty().withMessage("Category name is required").trim(),
 ];
 
-// Blog routes
-router.get("/stats/overview", protect, getBlogStats);
-router.get("/", getBlogs);
-router.get("/:identifier", getBlogByIdOrSlug);
-router.post("/", protect, blogValidation, validate, createBlog);
-router.put("/:id", protect, blogValidation, validate, updateBlog);
-router.delete("/:id", protect, deleteBlog);
-
-// Category routes
+// Category routes — MUST come before /:identifier wildcard
 router.get("/categories/all", getCategories);
-router.get("/categories/:identifier", getCategoryByIdOrSlug);
+router.get("/categories/:id", getCategoryById);
 router.post(
   "/categories",
   protect,
@@ -68,5 +60,13 @@ router.put(
   updateCategory,
 );
 router.delete("/categories/:id", protect, deleteCategory);
+
+// Blog routes
+router.get("/stats/overview", protect, getBlogStats);
+router.get("/", getBlogs);
+router.get("/:identifier", getBlogByIdOrSlug);
+router.post("/", protect, blogValidation, validate, createBlog);
+router.put("/:id", protect, blogValidation, validate, updateBlog);
+router.delete("/:id", protect, deleteBlog);
 
 module.exports = router;

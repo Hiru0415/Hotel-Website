@@ -8,19 +8,9 @@ const blogCategorySchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
-    slug: {
-      type: String,
-      unique: true,
-      lowercase: true,
-      trim: true,
-    },
     description: {
       type: String,
       trim: true,
-    },
-    isActive: {
-      type: Boolean,
-      default: true,
     },
   },
   {
@@ -30,16 +20,7 @@ const blogCategorySchema = new mongoose.Schema(
   },
 );
 
-// Auto-generate slug from name
-blogCategorySchema.pre("save", function (next) {
-  if (this.isModified("name") && !this.slug) {
-    this.slug = this.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-  }
-  next();
-});
+// No slug generation needed
 
 // Virtual for posts count
 blogCategorySchema.virtual("postsCount", {

@@ -17,10 +17,18 @@ function BlogCard({ blog, onClick }) {
           src={blog.featuredImageUrl}
           alt={blog.title}
           className="blog-card-image"
+          onError={(e) => {
+            e.target.style.display = "none";
+            e.target.nextSibling.style.display = "flex";
+          }}
         />
-      ) : (
-        <div className="blog-card-image-placeholder">No Image</div>
-      )}
+      ) : null}
+      <div
+        className="blog-card-image-placeholder"
+        style={{ display: blog.featuredImageUrl ? "none" : "flex" }}
+      >
+        No Image
+      </div>
 
       <div className="blog-card-body">
         <div className="blog-card-top">
@@ -35,7 +43,9 @@ function BlogCard({ blog, onClick }) {
 
         <div className="blog-meta">
           <span>
-            {blog.author?.name ? `By ${blog.author.name}` : "By Admin"}
+            {blog.authorName || blog.author?.name
+              ? `By ${blog.authorName || blog.author.name}`
+              : "By Admin"}
           </span>
           <span>
             {blog.publishedAt
@@ -62,7 +72,7 @@ function Blog() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/blog-categories?isActive=true`);
+      const response = await axios.get(`${API_BASE_URL}/blogs/categories/all`);
       setCategories(response.data?.data || []);
     } catch (error) {
       console.error("Failed to fetch categories:", error);

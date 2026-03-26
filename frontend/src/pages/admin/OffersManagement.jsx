@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { offersApi } from "../../api/adminApi";
 import { FiGift, FiEdit2, FiTrash2 } from "react-icons/fi";
+import ConfirmModal from "./ConfirmModal";
 
 const offerTypes = ["percentage", "fixed_amount", "special_package", "seasonal", "early_bird", "last_minute"];
 const statuses = ["draft", "active", "inactive", "expired"];
@@ -19,6 +20,7 @@ function OffersManagement() {
   const [form, setForm] = useState({ ...emptyOffer });
   const [alert, setAlert] = useState(null);
   const [filter, setFilter] = useState("all");
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, action: null, data: null });
 
   const fetchOffers = async () => {
     try {
@@ -68,9 +70,17 @@ function OffersManagement() {
     setShowForm(true);
   };
 
-  const handleSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    const payload = { ...form };
+    if (editId) {
+      setConfirmModal({ isOpen: true, action: "update", data: form });
+    } else {
+      performFormAction(form);
+    }
+  };
+
+  const performFormAction = async (formData) => {
+    const payload = { ...formData };
     if (!payload.discountPercentage) delete payload.discountPercentage;
     if (!payload.discountAmount) delete payload.discountAmount;
     if (!payload.usageLimit) delete payload.usageLimit;
@@ -92,14 +102,27 @@ function OffersManagement() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this offer?")) return;
-    try {
-      await offersApi.delete(id);
-      showAlertMsg("Offer deleted");
-      fetchOffers();
-    } catch (err) {
-      showAlertMsg(err.response?.data?.message || "Failed to delete", "error");
+  const handleDeleteClick = (id) => {
+    setConfirmModal({ isOpen: true, action: "delete", data: id });
+  };
+
+  const handleConfirmAction = async () => {
+    const { action, data } = confirmModal;
+    if (!action) return;
+
+    if (action === "delete") {
+      try {
+        await offersApi.delete(data);
+        showAlertMsg("Offer deleted");
+        fetchOffers();
+      } catch (err) {
+        showAlertMsg(err.response?.data?.message || "Failed to delete", "error");
+      } finally {
+        setConfirmModal({ isOpen: false, action: null, data: null });
+      }
+    } else if (action === "update") {
+      await performFormAction(data);
+      setConfirmModal({ isOpen: false, action: null, data: null });
     }
   };
 
@@ -167,7 +190,7 @@ function OffersManagement() {
                     <td>
                       <div className="admin-actions">
                         <button className="admin-btn-icon" title="Edit" onClick={() => openEdit(o)}><FiEdit2 /></button>
-                        <button className="admin-btn-icon" title="Delete" onClick={() => handleDelete(o._id)}><FiTrash2 /></button>
+                        <button className="admin-btn-icon" title="Delete" onClick={() => handleDeleteClick(o._id)}><FiTrash2 /></button>
                       </div>
                     </td>
                   </tr>
@@ -186,7 +209,7 @@ function OffersManagement() {
               <h3>{editId ? "Edit Offer" : "Create Offer"}</h3>
               <button className="admin-modal-close" onClick={() => setShowForm(false)}>×</button>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleFormSubmit}>
               <div className="admin-modal-body">
                 <div className="admin-form-group">
                   <label>Title</label>
@@ -273,6 +296,16 @@ function OffersManagement() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.action === "update" ? "Confirm Update" : "Delete Offer"}
+        message={confirmModal.action === "update" ? "Are you sure you want to update this offer's details?" : "Are you sure you want to delete this offer? This action cannot be undone."}
+        onConfirm={handleConfirmAction}
+        onCancel={() => setConfirmModal({ isOpen: false, action: null, data: null })}
+        confirmText={confirmModal.action === "update" ? "Update" : "Delete"}
+        intent={confirmModal.action === "update" ? "info" : "danger"}
+      />
     </div>
   );
 }
