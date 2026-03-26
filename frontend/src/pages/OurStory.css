@@ -1,0 +1,278 @@
+.ourstory-page {
+  background: #f5f5f3;
+  min-height: 100vh;
+}
+
+.ourstory-hero {
+  position: relative;
+  height: 78vh;
+  min-height: 520px;
+  overflow: hidden;
+}
+
+.ourstory-hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ourstory-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.ourstory-top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 3;
+  padding: 24px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ourstory-logo {
+  width: 78px;
+  height: auto;
+}
+
+.ourstory-menu-btn {
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  border: none;
+  font-size: 34px;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+}
+
+.ourstory-hero-content {
+  position: absolute;
+  z-index: 3;
+  left: 7%;
+  bottom: 18%;
+  color: #fff;
+}
+
+.ourstory-hero-content p {
+  font-size: 15px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.ourstory-hero-content h1 {
+  font-size: 78px;
+  font-weight: 300;
+  margin: 0;
+  line-height: 1;
+}
+
+.ourstory-section {
+  padding: 80px 60px;
+  background: #f5f5f3;
+}
+
+.ourstory-section.alt {
+  background: #ffffff;
+}
+
+.ourstory-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.ourstory-grid.reverse .ourstory-image-wrap {
+  order: 2;
+}
+
+.ourstory-grid.reverse .ourstory-text {
+  order: 1;
+}
+
+.ourstory-image-wrap {
+  width: 100%;
+}
+
+.ourstory-image {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  display: block;
+}
+
+.ourstory-text h2 {
+  font-size: 42px;
+  margin-bottom: 20px;
+  color: #202020;
+  font-weight: 400;
+}
+
+.ourstory-text p {
+  font-size: 19px;
+  line-height: 1.9;
+  color: #3d3d3d;
+  margin-bottom: 24px;
+}
+
+.milestone-section {
+  padding: 80px 60px;
+  background: #111111;
+  color: #fff;
+}
+
+.milestone-section h2 {
+  text-align: center;
+  font-size: 42px;
+  margin-bottom: 40px;
+  font-weight: 400;
+}
+
+.milestone-grid {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.milestone-card {
+  background: #1b1b1b;
+  padding: 28px;
+  border-left: 4px solid #d4af37;
+}
+
+.milestone-card .year {
+  display: block;
+  font-size: 28px;
+  font-weight: 600;
+  color: #d4af37;
+  margin-bottom: 12px;
+}
+
+.milestone-card p {
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.directors-section {
+  padding: 90px 60px;
+  background: #f5f5f3;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.section-heading p {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #b78b1e;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.section-heading h2 {
+  font-size: 42px;
+  margin: 0;
+  font-weight: 400;
+  color: #202020;
+}
+
+.directors-grid {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+}
+
+.director-card {
+  background: #fff;
+  padding: 26px 24px;
+  border-bottom: 3px solid #d4af37;
+  min-height: 170px;
+}
+
+.director-card h3 {
+  margin: 0 0 14px 0;
+  font-size: 28px;
+  font-weight: 500;
+  color: #1e1e1e;
+}
+
+.director-card p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #444;
+}
+
+@media (max-width: 1100px) {
+  .ourstory-grid,
+  .milestone-grid,
+  .directors-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ourstory-hero-content h1 {
+    font-size: 58px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ourstory-section,
+  .milestone-section,
+  .directors-section {
+    padding: 60px 24px;
+  }
+
+  .ourstory-grid,
+  .milestone-grid,
+  .directors-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ourstory-grid.reverse .ourstory-image-wrap,
+  .ourstory-grid.reverse .ourstory-text {
+    order: unset;
+  }
+
+  .ourstory-image {
+    height: 320px;
+  }
+
+  .ourstory-hero-content {
+    left: 24px;
+    right: 24px;
+    bottom: 14%;
+  }
+
+  .ourstory-hero-content h1 {
+    font-size: 44px;
+  }
+
+  .ourstory-text h2,
+  .milestone-section h2,
+  .section-heading h2 {
+    font-size: 32px;
+  }
+
+  .director-card h3 {
+    font-size: 22px;
+  }
+
+  .ourstory-text p,
+  .director-card p {
+    font-size: 16px;
+  }
+}

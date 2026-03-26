@@ -4,6 +4,7 @@ import { api } from "../api/api";
 import "./Booking.css";
 import logo from "../assets/logo.png";
 import Footer from "../components/Footer";
+import PageBackground from "../components/PageBackground";
 
 function Booking() {
   const navigate = useNavigate();
@@ -130,6 +131,7 @@ function Booking() {
         </button>
       </header>
 
+    <PageBackground overlayOpacity={0.22}>
       <main className="booking-main">
         <form className="booking-panel" onSubmit={handleSubmit}>
           <h2>Contact Details</h2>
@@ -323,6 +325,7 @@ function Booking() {
           </div>
         </form>
       </main>
+      </PageBackground>
 
       <Footer />
 

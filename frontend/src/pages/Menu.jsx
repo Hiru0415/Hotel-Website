@@ -39,7 +39,7 @@ function Menu() {
         <div className="menu-links">
           <Link to="/colombo">Colombo</Link>
           <Link to="/offers">Offers</Link>
-          <a href="#">Our story</a>
+          <Link to="/our-story">Our story</Link>
           <Link to="/careers">Careers</Link>
           <Link to="/blog">Blog</Link>
           <Link to="/contact">Contact us</Link>

@@ -3,6 +3,7 @@ import { api } from "../api/api";
 import "./ContactUs.css";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import PageBackground from "../components/PageBackground";
 
 function ContactUs({ onBackToMenu }) {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ function ContactUs({ onBackToMenu }) {
           &#9776;
         </button>
       </header>
-
+    <PageBackground overlayOpacity={0.22}>
       <main className="contactus-main">
         <form className="contactus-panel" onSubmit={handleSubmit}>
           <h1>Contact Us</h1>
@@ -117,7 +118,7 @@ function ContactUs({ onBackToMenu }) {
           </div>
         </form>
       </main>
-
+      </PageBackground>
       <footer className="contactus-footer">
         <div className="contactus-footer-col contactus-footer-brand">
           <img src={logo} alt="Logo" className="contactus-footer-logo" />

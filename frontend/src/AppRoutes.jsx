@@ -16,6 +16,8 @@ import Blog from "./pages/Blog";
 import Offers from "./pages/Offers";
 import OfferDetails from "./pages/OfferDetails";
 import BlogDetails from "./pages/BlogDetails";
+import OurStory from "./pages/OurStory";
+import GalleryDetails from "./pages/GalleryDetails";
 // Admin imports
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -52,6 +54,8 @@ function AppRoutes() {
         <Route path="/offers" element={<Offers />} />
         <Route path="/offers/:identifier" element={<OfferDetails />} />
         <Route path="/blog/:identifier" element={<BlogDetails />} />
+        <Route path="/our-story" element={<OurStory />} />
+        <Route path="/gallery/:category" element={<GalleryDetails />} />
         
         {/* Admin routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
