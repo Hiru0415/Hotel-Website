@@ -1,4 +1,5 @@
 import "./Gallery.css";
+import { useNavigate } from "react-router-dom";
 
 import logo from "../assets/logo.png";
 import hero from "../assets/renuka.png";
@@ -23,6 +24,8 @@ function GalleryCard({ image, title }) {
 }
 
 function Gallery({ onBackToMenu, onBookingClick }) {
+  const navigate = useNavigate();
+
   return (
     <div className="gallery-page">
       <section className="gallery-hero">
@@ -35,7 +38,7 @@ function Gallery({ onBackToMenu, onBookingClick }) {
           <button
             className="gallery-menu-btn"
             aria-label="Back to menu"
-            onClick={onBackToMenu}
+            onClick={() => navigate("/menu")}
             type="button"
           >
             &#9776;
@@ -46,7 +49,7 @@ function Gallery({ onBackToMenu, onBookingClick }) {
           <h1>Gallery</h1>
         </div>
 
-        <div className="gallery-booking-bar">
+        {/* <div className="gallery-booking-bar">
           <div className="gallery-booking-item">📅 CHECK IN</div>
           <div className="gallery-booking-item">📅 CHECK OUT</div>
           <div className="gallery-booking-item">👥 GUESTS</div>
@@ -57,7 +60,7 @@ function Gallery({ onBackToMenu, onBookingClick }) {
           >
             BOOK NOW
           </button>
-        </div>
+        </div> */}
       </section>
 
       <section className="gallery-content">

@@ -1,4 +1,7 @@
 import "./Meetings.css";
+import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
+
 
 import logo from "../assets/logo.png";
 import hero from "../assets/meeting.png";
@@ -47,7 +50,13 @@ function VenueCard({ image, tags, featuresLeft, featuresRight }) {
   );
 }
 
-function Meetings({ onBackToMenu, onBookingClick }) {
+function Meetings({ onBackToMenu }) {
+  const navigate = useNavigate();
+
+  const handleEnquiryClick = () => {
+    navigate("/enquiry");
+  };
+
   return (
     <div className="meetings-page">
       <section className="meetings-hero">
@@ -60,7 +69,7 @@ function Meetings({ onBackToMenu, onBookingClick }) {
           <button
             className="meetings-menu-btn"
             aria-label="Back to menu"
-            onClick={onBackToMenu}
+            onClick={() => navigate("/menu")}
             type="button"
           >
             &#9776;
@@ -70,19 +79,6 @@ function Meetings({ onBackToMenu, onBookingClick }) {
         <div className="meetings-hero-content">
           <h1>Meetings</h1>
         </div>
-
-        <div className="meetings-booking-bar">
-          <div className="meetings-booking-item">📅 CHECK IN</div>
-          <div className="meetings-booking-item">📅 CHECK OUT</div>
-          <div className="meetings-booking-item">👥 GUESTS</div>
-          <button
-            className="meetings-book-now-btn"
-            type="button"
-            onClick={onBookingClick}
-          >
-            BOOK NOW
-          </button>
-        </div>
       </section>
 
       <section className="meetings-content">
@@ -90,7 +86,6 @@ function Meetings({ onBackToMenu, onBookingClick }) {
           <div className="meetings-intro-image-wrap">
             <img src={chair} alt="Meeting area" className="meetings-intro-image" />
           </div>
-
           <div className="meetings-intro-text">
             <p>
               Enjoy state-of-the-art facilities and services for your business
@@ -110,6 +105,14 @@ function Meetings({ onBackToMenu, onBookingClick }) {
               <li>Half Day Conference</li>
               <li>3 Hour Snack Meeting</li>
             </ul>
+
+            <button
+              type="button"
+              className="conference-enquiry-btn"
+              onClick={handleEnquiryClick}
+            >
+              Enquiry Form
+            </button>
           </div>
 
           <div className="conference-right">
@@ -158,57 +161,7 @@ function Meetings({ onBackToMenu, onBookingClick }) {
         </section>
       </section>
 
-      <footer className="meetings-footer">
-        <div className="meetings-footer-col meetings-footer-brand">
-          <img src={logo} alt="Logo" className="meetings-footer-logo" />
-          <ul>
-            <li>Cookie Policy</li>
-            <li>Privacy Policy</li>
-            <li>Sitemap</li>
-            <li>Powered by SLK</li>
-            <li>Copyright © 2023 Renuka City Hotel</li>
-          </ul>
-        </div>
-
-        <div className="meetings-footer-col">
-          <ul>
-            <li>home</li>
-            <li>rooms</li>
-            <li>• super deluxe room</li>
-            <li>• deluxe room</li>
-            <li>• standard room</li>
-            <li>dine & drink</li>
-            <li>• Palmyrah restaurant & bar</li>
-            <li>gallery</li>
-          </ul>
-        </div>
-
-        <div className="meetings-footer-col">
-          <ul>
-            <li>meetings</li>
-            <li>special occasions</li>
-            <li>facilities</li>
-            <li>Colombo</li>
-            <li>offers</li>
-            <li>our story</li>
-            <li>careers</li>
-            <li>blog</li>
-            <li>privacy policy</li>
-            <li>contact us</li>
-          </ul>
-        </div>
-
-        <div className="meetings-footer-col">
-          <ul>
-            <li>328 Galle Road Colombo 3 Sri Lanka</li>
-            <li>+94-112573598/602</li>
-            <li>+94-112573145/8</li>
-            <li>+94-112574137</li>
-            <li>+94-112576183</li>
-            <li>renukah@renukahotel.com</li>
-          </ul>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

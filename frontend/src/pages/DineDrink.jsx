@@ -1,4 +1,5 @@
 import "./DineDrink.css";
+import { useNavigate } from "react-router-dom";
 
 import logo from "../assets/logo.png";
 import hero from "../assets/dine.png";
@@ -8,6 +9,8 @@ import two from "../assets/two.png";
 import table from "../assets/table.png";
 
 function DineDrink({ onBackToMenu, onBookingClick }) {
+  const navigate = useNavigate();
+
   return (
     <div className="dine-page">
       <section className="dine-hero">
@@ -20,7 +23,7 @@ function DineDrink({ onBackToMenu, onBookingClick }) {
           <button
             className="dine-menu-btn"
             aria-label="Back to menu"
-            onClick={onBackToMenu}
+            onClick={() => navigate("/menu")}
             type="button"
           >
             &#9776;
@@ -31,18 +34,7 @@ function DineDrink({ onBackToMenu, onBookingClick }) {
           <h1>Dine &amp; Drink</h1>
         </div>
 
-        <div className="dine-booking-bar">
-          <div className="dine-booking-item">📅 CHECK IN</div>
-          <div className="dine-booking-item">📅 CHECK OUT</div>
-          <div className="dine-booking-item">👥 GUESTS</div>
-          <button
-            className="dine-book-now-btn"
-            type="button"
-            onClick={onBookingClick}
-          >
-            BOOK NOW
-          </button>
-        </div>
+    
       </section>
 
       <section className="dine-content">

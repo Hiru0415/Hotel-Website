@@ -6,12 +6,7 @@ const { sendSuccess } = require("../utils/responseHandler");
 // @access  Public
 exports.getCategories = async (req, res, next) => {
   try {
-    const { isActive } = req.query;
-
-    const query = {};
-    if (isActive !== undefined) query.isActive = isActive === "true";
-
-    const categories = await BlogCategory.find(query)
+    const categories = await BlogCategory.find({})
       .populate("postsCount")
       .sort({ name: 1 });
 
@@ -21,20 +16,14 @@ exports.getCategories = async (req, res, next) => {
   }
 };
 
-// @desc    Get single blog category by ID or slug
-// @route   GET /api/v1/blog-categories/:identifier
+// @desc    Get single blog category by ID
+// @route   GET /api/v1/blog-categories/:id
 // @access  Public
-exports.getCategoryByIdOrSlug = async (req, res, next) => {
+exports.getCategoryById = async (req, res, next) => {
   try {
-    const { identifier } = req.params;
+    const { id } = req.params;
 
-    let category = await BlogCategory.findOne({ slug: identifier }).populate(
-      "postsCount",
-    );
-
-    if (!category) {
-      category = await BlogCategory.findById(identifier).populate("postsCount");
-    }
+    const category = await BlogCategory.findById(id).populate("postsCount");
 
     if (!category) {
       return res.status(404).json({
@@ -67,14 +56,7 @@ exports.createCategory = async (req, res, next) => {
 // @access  Private (Admin)
 exports.updateCategory = async (req, res, next) => {
   try {
-    const category = await BlogCategory.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      },
-    );
+    const category = await BlogCategory.findById(req.params.id);
 
     if (!category) {
       return res.status(404).json({
@@ -82,6 +64,11 @@ exports.updateCategory = async (req, res, next) => {
         message: "Blog category not found",
       });
     }
+
+    category.name = req.body.name ?? category.name;
+    category.description = req.body.description ?? category.description;
+
+    await category.save();
 
     sendSuccess(res, category, "Blog category updated successfully");
   } catch (error) {
