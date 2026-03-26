@@ -60,3 +60,32 @@ exports.authorize = (...roles) => {
     next();
   };
 };
+
+// Optional auth - attach admin context if token is valid, otherwise continue as public
+exports.optionalProtect = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) {
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const admin = await Admin.findById(decoded.id).select("-password");
+
+    if (admin && admin.isActive) {
+      req.admin = admin;
+    }
+  } catch (error) {
+    // Ignore invalid tokens on public routes and continue without admin context
+  }
+
+  next();
+};

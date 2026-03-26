@@ -3,7 +3,13 @@ import { roomsApi } from "../../api/adminApi";
 import { FiLayers, FiEdit2, FiTrash2 } from "react-icons/fi";
 import ConfirmModal from "./ConfirmModal";
 
-const emptyRoom = { roomType: "", totalInventory: 10, pricePerNight: 0, description: "", isActive: true };
+const emptyRoom = {
+  roomType: "",
+  totalInventory: 10,
+  pricePerNight: 0,
+  description: "",
+  isActive: true,
+};
 
 function RoomsManagement() {
   const [rooms, setRooms] = useState([]);
@@ -12,7 +18,11 @@ function RoomsManagement() {
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({ ...emptyRoom });
   const [alert, setAlert] = useState(null);
-  const [confirmModal, setConfirmModal] = useState({ isOpen: false, action: null, data: null });
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    action: null,
+    data: null,
+  });
 
   const fetchRooms = async () => {
     try {
@@ -25,7 +35,9 @@ function RoomsManagement() {
     }
   };
 
-  useEffect(() => { fetchRooms(); }, []);
+  useEffect(() => {
+    fetchRooms();
+  }, []);
 
   const showAlertMsg = (msg, type = "success") => {
     setAlert({ msg, type });
@@ -89,7 +101,10 @@ function RoomsManagement() {
         showAlertMsg("Room deleted");
         fetchRooms();
       } catch (err) {
-        showAlertMsg(err.response?.data?.message || "Failed to delete", "error");
+        showAlertMsg(
+          err.response?.data?.message || "Failed to delete",
+          "error",
+        );
       } finally {
         setConfirmModal({ isOpen: false, action: null, data: null });
       }
@@ -101,7 +116,10 @@ function RoomsManagement() {
 
   if (loading) {
     return (
-      <div className="admin-loading-screen" style={{ height: "50vh", background: "transparent" }}>
+      <div
+        className="admin-loading-screen"
+        style={{ height: "50vh", background: "transparent" }}
+      >
         <div className="admin-spinner" />
       </div>
     );
@@ -111,7 +129,11 @@ function RoomsManagement() {
     <div>
       <h1 className="admin-page-title">Rooms</h1>
 
-      {alert && <div className={`admin-alert admin-alert-${alert.type}`}>{alert.msg}</div>}
+      {alert && (
+        <div className={`admin-alert admin-alert-${alert.type}`}>
+          {alert.msg}
+        </div>
+      )}
 
       <div className="admin-table-wrapper">
         <div className="admin-table-header">
@@ -136,7 +158,9 @@ function RoomsManagement() {
                 <tr>
                   <td colSpan="5">
                     <div className="admin-empty-state">
-                      <div className="empty-icon"><FiLayers /></div>
+                      <div className="empty-icon">
+                        <FiLayers />
+                      </div>
                       <p>No room types configured</p>
                     </div>
                   </td>
@@ -146,16 +170,30 @@ function RoomsManagement() {
                   <tr key={r._id}>
                     <td style={{ fontWeight: 500 }}>{r.roomType}</td>
                     <td>{r.totalInventory}</td>
-                    <td>${r.pricePerNight || 0}</td>
+                    <td>LKR {r.pricePerNight || 0}</td>
                     <td>
-                      <span className={`status-badge ${r.isActive !== false ? "active" : "inactive"}`}>
+                      <span
+                        className={`status-badge ${r.isActive !== false ? "active" : "inactive"}`}
+                      >
                         {r.isActive !== false ? "Active" : "Inactive"}
                       </span>
                     </td>
                     <td>
                       <div className="admin-actions">
-                        <button className="admin-btn-icon" title="Edit" onClick={() => openEdit(r)}><FiEdit2 /></button>
-                        <button className="admin-btn-icon" title="Delete" onClick={() => handleDeleteClick(r._id)}><FiTrash2 /></button>
+                        <button
+                          className="admin-btn-icon"
+                          title="Edit"
+                          onClick={() => openEdit(r)}
+                        >
+                          <FiEdit2 />
+                        </button>
+                        <button
+                          className="admin-btn-icon"
+                          title="Delete"
+                          onClick={() => handleDeleteClick(r._id)}
+                        >
+                          <FiTrash2 />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -172,7 +210,12 @@ function RoomsManagement() {
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
               <h3>{editId ? "Edit Room Type" : "Add Room Type"}</h3>
-              <button className="admin-modal-close" onClick={() => setShowForm(false)}>×</button>
+              <button
+                className="admin-modal-close"
+                onClick={() => setShowForm(false)}
+              >
+                ×
+              </button>
             </div>
             <form onSubmit={handleFormSubmit}>
               <div className="admin-modal-body">
@@ -180,7 +223,9 @@ function RoomsManagement() {
                   <label>Room Type Name</label>
                   <input
                     value={form.roomType}
-                    onChange={(e) => setForm({ ...form, roomType: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, roomType: e.target.value })
+                    }
                     placeholder="e.g. Executive Suite"
                     required
                   />
@@ -192,17 +237,27 @@ function RoomsManagement() {
                       type="number"
                       min="1"
                       value={form.totalInventory}
-                      onChange={(e) => setForm({ ...form, totalInventory: parseInt(e.target.value) || 0 })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          totalInventory: parseInt(e.target.value) || 0,
+                        })
+                      }
                       required
                     />
                   </div>
                   <div className="admin-form-group">
-                    <label>Price Per Night ($)</label>
+                    <label>Price Per Night (LKR)</label>
                     <input
                       type="number"
                       min="0"
                       value={form.pricePerNight}
-                      onChange={(e) => setForm({ ...form, pricePerNight: parseFloat(e.target.value) || 0 })}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          pricePerNight: parseFloat(e.target.value) || 0,
+                        })
+                      }
                     />
                   </div>
                 </div>
@@ -210,16 +265,27 @@ function RoomsManagement() {
                   <label>Description</label>
                   <textarea
                     value={form.description}
-                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, description: e.target.value })
+                    }
                     placeholder="Room description..."
                   />
                 </div>
                 <div className="admin-form-group">
-                  <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      cursor: "pointer",
+                    }}
+                  >
                     <input
                       type="checkbox"
                       checked={form.isActive}
-                      onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+                      onChange={(e) =>
+                        setForm({ ...form, isActive: e.target.checked })
+                      }
                       style={{ width: "auto" }}
                     />
                     Active
@@ -227,7 +293,11 @@ function RoomsManagement() {
                 </div>
               </div>
               <div className="admin-modal-footer">
-                <button type="button" className="admin-btn admin-btn-secondary" onClick={() => setShowForm(false)}>
+                <button
+                  type="button"
+                  className="admin-btn admin-btn-secondary"
+                  onClick={() => setShowForm(false)}
+                >
                   Cancel
                 </button>
                 <button type="submit" className="admin-btn admin-btn-primary">
@@ -241,10 +311,20 @@ function RoomsManagement() {
 
       <ConfirmModal
         isOpen={confirmModal.isOpen}
-        title={confirmModal.action === "update" ? "Confirm Update" : "Delete Room Type"}
-        message={confirmModal.action === "update" ? "Are you sure you want to update this room's details?" : "Are you sure you want to delete this room type? This action cannot be undone."}
+        title={
+          confirmModal.action === "update"
+            ? "Confirm Update"
+            : "Delete Room Type"
+        }
+        message={
+          confirmModal.action === "update"
+            ? "Are you sure you want to update this room's details?"
+            : "Are you sure you want to delete this room type? This action cannot be undone."
+        }
         onConfirm={handleConfirmAction}
-        onCancel={() => setConfirmModal({ isOpen: false, action: null, data: null })}
+        onCancel={() =>
+          setConfirmModal({ isOpen: false, action: null, data: null })
+        }
         confirmText={confirmModal.action === "update" ? "Update" : "Delete"}
         intent={confirmModal.action === "update" ? "info" : "danger"}
       />
