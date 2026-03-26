@@ -41,6 +41,12 @@ const blogSchema = new mongoose.Schema(
       ref: "Admin",
       required: true,
     },
+    // Optional custom display name — overrides the admin's account name in frontend/public views
+    authorName: {
+      type: String,
+      trim: true,
+      maxlength: [100, "Author name cannot exceed 100 characters"],
+    },
     status: {
       type: String,
       enum: ["draft", "published", "archived"],
@@ -84,18 +90,17 @@ const blogSchema = new mongoose.Schema(
 );
 
 // Auto-generate slug from title
-blogSchema.pre("save", function (next) {
+blogSchema.pre("save", function () {
   if (this.isModified("title") && !this.slug) {
     this.slug = this.title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
   }
-  next();
 });
 
 // Auto-set publishedAt when status changes to published
-blogSchema.pre("save", function (next) {
+blogSchema.pre("save", function () {
   if (
     this.isModified("status") &&
     this.status === "published" &&
@@ -103,7 +108,6 @@ blogSchema.pre("save", function (next) {
   ) {
     this.publishedAt = new Date();
   }
-  next();
 });
 
 // Index for search and filtering

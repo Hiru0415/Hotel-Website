@@ -103,6 +103,7 @@ exports.getBlogByIdOrSlug = async (req, res, next) => {
 // @access  Private (Admin)
 exports.createBlog = async (req, res, next) => {
   try {
+    // Always use the authenticated admin as the author — never trust the client
     req.body.author = req.admin.id;
 
     const blog = await Blog.create(req.body);
@@ -118,6 +119,10 @@ exports.createBlog = async (req, res, next) => {
 // @access  Private (Admin)
 exports.updateBlog = async (req, res, next) => {
   try {
+    if (!req.body.author) {
+      delete req.body.author;
+    }
+
     const blog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,

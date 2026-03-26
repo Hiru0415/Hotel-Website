@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { authApi } from "../../api/adminApi";
 import { useAuth } from "../../context/AuthContext";
 import { FiLock, FiCheck, FiX, FiTrash2, FiKey } from "react-icons/fi";
+import ConfirmModal from "./ConfirmModal";
 
 const emptyAdmin = { name: "", email: "", password: "", role: "admin" };
 
@@ -15,6 +16,7 @@ function AdminsManagement() {
   const [resetPassword, setResetPassword] = useState("");
   const [isResetting, setIsResetting] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, action: null, data: null });
 
   const fetchAdmins = async () => {
     try {
@@ -59,14 +61,30 @@ function AdminsManagement() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this admin?")) return;
-    try {
-      await authApi.deleteAdmin(id);
-      showMsg("Admin deleted");
-      fetchAdmins();
-    } catch (err) {
-      showMsg(err.response?.data?.message || "Failed to delete", "error");
+  const handleDeleteClick = (id) => {
+    setConfirmModal({ isOpen: true, action: "delete", data: id });
+  };
+
+  const handleConfirmAction = async () => {
+    const { action, data } = confirmModal;
+    if (!action) return;
+
+    if (action === "update_password") {
+      await performResetPassword(data);
+      setConfirmModal({ isOpen: false, action: null, data: null });
+      return;
+    }
+
+    if (action === "delete") {
+      try {
+        await authApi.deleteAdmin(data);
+        showMsg("Admin deleted");
+        fetchAdmins();
+      } catch (err) {
+        showMsg(err.response?.data?.message || "Failed to delete", "error");
+      } finally {
+        setConfirmModal({ isOpen: false, action: null, data: null });
+      }
     }
   };
 
@@ -80,16 +98,17 @@ function AdminsManagement() {
     setResetPassword("");
   };
 
-  const handleResetPassword = async (e) => {
+  const handleResetPasswordSubmit = (e) => {
     e.preventDefault();
-    if (!resetTarget?._id) {
-      return;
-    }
+    if (!resetTarget?._id) return;
+    setConfirmModal({ isOpen: true, action: "update_password", data: { id: resetTarget._id, password: resetPassword } });
+  };
 
+  const performResetPassword = async ({ id, password }) => {
     setIsResetting(true);
     try {
-      await authApi.resetAdminPassword(resetTarget._id, {
-        newPassword: resetPassword,
+      await authApi.resetAdminPassword(id, {
+        newPassword: password,
       });
       showMsg(`Password reset for ${resetTarget.name}`);
       closeResetModal();
@@ -210,7 +229,7 @@ function AdminsManagement() {
                           <button
                             className="admin-btn-icon"
                             title="Delete"
-                            onClick={() => handleDelete(a._id)}
+                            onClick={() => handleDeleteClick(a._id)}
                           >
                             <FiTrash2 />
                           </button>
@@ -307,7 +326,7 @@ function AdminsManagement() {
                 ×
               </button>
             </div>
-            <form onSubmit={handleResetPassword}>
+            <form onSubmit={handleResetPasswordSubmit}>
               <div className="admin-modal-body">
                 <p style={{ marginTop: 0, color: "#666" }}>
                   Set a new password for <strong>{resetTarget.name}</strong>.
@@ -343,6 +362,16 @@ function AdminsManagement() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.action === "update_password" ? "Confirm Password Reset" : "Delete Admin"}
+        message={confirmModal.action === "update_password" ? "Are you sure you want to reset this admin's password?" : "Are you sure you want to delete this admin account? This action cannot be undone."}
+        onConfirm={handleConfirmAction}
+        onCancel={() => setConfirmModal({ isOpen: false, action: null, data: null })}
+        confirmText={confirmModal.action === "update_password" ? "Update" : "Delete"}
+        intent={confirmModal.action === "update_password" ? "info" : "danger"}
+      />
     </div>
   );
 }

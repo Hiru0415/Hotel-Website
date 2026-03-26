@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { careersApi } from "../../api/adminApi";
 import { FiBriefcase, FiClipboard, FiEdit2, FiTrash2, FiEye } from "react-icons/fi";
+import ConfirmModal from "./ConfirmModal";
 
 const departments = ["Front Desk","Housekeeping","Food & Beverage","Kitchen","Management","Maintenance","Sales & Marketing","Finance","Human Resources","Security","Other"];
 const employmentTypes = ["Full-time","Part-time","Contract","Internship"];
@@ -18,6 +19,7 @@ function CareersManagement() {
   const [form, setForm] = useState({...emptyCareer});
   const [selectedApp, setSelectedApp] = useState(null);
   const [alert, setAlert] = useState(null);
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, id: null, type: null, action: null, data: null });
 
   const fetchData = async () => {
     try {
@@ -38,31 +40,54 @@ function CareersManagement() {
     setEditId(c._id);setShowForm(true);
   };
 
-  const handleSubmit=async(e)=>{
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    const p={...form};if(!p.applicationDeadline)delete p.applicationDeadline;
-    try{
-      if(editId){await careersApi.update(editId,p);showMsg("Career updated");}
-      else{await careersApi.create(p);showMsg("Career created");}
-      setShowForm(false);fetchData();
-    }catch(err){showMsg(err.response?.data?.message||"Failed","error");}
+    if (editId) {
+      setConfirmModal({ isOpen: true, action: "update_career", data: form });
+    } else {
+      performFormAction(form);
+    }
   };
 
-  const handleDelete=async(id)=>{
-    if(!window.confirm("Delete this career?"))return;
-    try{await careersApi.delete(id);showMsg("Deleted");fetchData();}
-    catch(err){showMsg(err.response?.data?.message||"Failed","error");}
+  const performFormAction = async (formData) => {
+    const p = { ...formData };
+    if (!p.applicationDeadline) delete p.applicationDeadline;
+    try {
+      if (editId) { await careersApi.update(editId, p); showMsg("Career updated"); }
+      else { await careersApi.create(p); showMsg("Career created"); }
+      setShowForm(false); fetchData();
+    } catch(err) { showMsg(err.response?.data?.message||"Failed","error"); }
   };
 
-  const handleAppStatus=async(id,status)=>{
-    try{await careersApi.updateApplicationStatus(id,{status});showMsg(`Status: ${status}`);fetchData();setSelectedApp(null);}
-    catch(err){showMsg(err.response?.data?.message||"Failed","error");}
+  const handleDeleteClick=(id, type)=>{
+    setConfirmModal({ isOpen: true, id, type, action: "delete" });
   };
 
-  const handleDeleteApp=async(id)=>{
-    if(!window.confirm("Delete application?"))return;
-    try{await careersApi.deleteApplication(id);showMsg("Deleted");setSelectedApp(null);fetchData();}
-    catch(err){showMsg(err.response?.data?.message||"Failed","error");}
+  const handleConfirmAction=async()=>{
+    const { id, type, action, data } = confirmModal;
+
+    if (action === "update_career") {
+      await performFormAction(data);
+      setConfirmModal({ isOpen: false, id: null, type: null, action: null, data: null });
+      return;
+    }
+
+    if(!id || !type) return;
+    try {
+      if(type === "career") {
+        await careersApi.delete(id);
+        showMsg("Deleted");
+      } else if (type === "application") {
+        await careersApi.deleteApplication(id);
+        showMsg("Deleted");
+        setSelectedApp(null);
+      }
+      fetchData();
+    } catch(err) {
+      showMsg(err.response?.data?.message||"Failed","error");
+    } finally {
+      setConfirmModal({ isOpen: false, id: null, type: null, action: null, data: null });
+    }
   };
 
   if(loading)return <div className="admin-loading-screen" style={{height:"50vh",background:"transparent"}}><div className="admin-spinner"/></div>;
@@ -82,7 +107,7 @@ function CareersManagement() {
           <div className="admin-table-header"><h3>{careers.length} position(s)</h3><button className="admin-btn admin-btn-primary" onClick={openCreate}>+ New Position</button></div>
           <div className="table-overflow"><table className="admin-table"><thead><tr><th>Title</th><th>Department</th><th>Location</th><th>Type</th><th>Vacancies</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody>{careers.length===0?<tr><td colSpan="7"><div className="admin-empty-state"><div className="empty-icon"><FiBriefcase /></div><p>No positions</p></div></td></tr>:
-            careers.map(c=><tr key={c._id}><td style={{fontWeight:500}}>{c.title}</td><td>{c.department}</td><td>{c.location}</td><td>{c.employmentType}</td><td>{c.vacancies}</td><td><span className={`status-badge ${c.status}`}>{c.status}</span></td><td><div className="admin-actions"><button className="admin-btn-icon" onClick={()=>openEdit(c)} title="Edit"><FiEdit2 /></button><button className="admin-btn-icon" onClick={()=>handleDelete(c._id)} title="Delete"><FiTrash2 /></button></div></td></tr>)
+            careers.map(c=><tr key={c._id}><td style={{fontWeight:500}}>{c.title}</td><td>{c.department}</td><td>{c.location}</td><td>{c.employmentType}</td><td>{c.vacancies}</td><td><span className={`status-badge ${c.status}`}>{c.status}</span></td><td><div className="admin-actions"><button className="admin-btn-icon" onClick={()=>openEdit(c)} title="Edit"><FiEdit2 /></button><button className="admin-btn-icon" onClick={()=>handleDeleteClick(c._id, "career")} title="Delete"><FiTrash2 /></button></div></td></tr>)
           }</tbody></table></div>
         </div>
       )}
@@ -92,7 +117,7 @@ function CareersManagement() {
           <div className="admin-table-header"><h3>{applications.length} application(s)</h3></div>
           <div className="table-overflow"><table className="admin-table"><thead><tr><th>Applicant</th><th>Email</th><th>Position</th><th>Availability</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
           <tbody>{applications.length===0?<tr><td colSpan="7"><div className="admin-empty-state"><div className="empty-icon"><FiClipboard /></div><p>No applications</p></div></td></tr>:
-            applications.map(a=><tr key={a._id}><td style={{fontWeight:500}}>{a.firstName} {a.lastName}</td><td>{a.email}</td><td>{a.career?.title||"—"}</td><td>{a.availability}</td><td><span className={`status-badge ${a.status}`}>{a.status}</span></td><td>{new Date(a.createdAt).toLocaleDateString()}</td><td><button className="admin-btn-icon" onClick={()=>setSelectedApp(a)} title="View"><FiEye /></button><button className="admin-btn-icon" onClick={()=>handleDeleteApp(a._id)} title="Delete"><FiTrash2 /></button></td></tr>)
+            applications.map(a=><tr key={a._id}><td style={{fontWeight:500}}>{a.firstName} {a.lastName}</td><td>{a.email}</td><td>{a.career?.title||"—"}</td><td>{a.availability}</td><td><span className={`status-badge ${a.status}`}>{a.status}</span></td><td>{new Date(a.createdAt).toLocaleDateString()}</td><td><button className="admin-btn-icon" onClick={()=>setSelectedApp(a)} title="View"><FiEye /></button><button className="admin-btn-icon" onClick={()=>handleDeleteClick(a._id, "application")} title="Delete"><FiTrash2 /></button></td></tr>)
           }</tbody></table></div>
         </div>
       )}
@@ -101,7 +126,7 @@ function CareersManagement() {
         <div className="admin-modal-overlay" onClick={()=>setShowForm(false)}>
           <div className="admin-modal wide" onClick={e=>e.stopPropagation()}>
             <div className="admin-modal-header"><h3>{editId?"Edit":"Create"} Position</h3><button className="admin-modal-close" onClick={()=>setShowForm(false)}>×</button></div>
-            <form onSubmit={handleSubmit}><div className="admin-modal-body">
+            <form onSubmit={handleFormSubmit}><div className="admin-modal-body">
               <div className="admin-form-group"><label>Job Title</label><input value={form.title} onChange={e=>setForm({...form,title:e.target.value})} required/></div>
               <div className="admin-form-row">
                 <div className="admin-form-group"><label>Department</label><select value={form.department} onChange={e=>setForm({...form,department:e.target.value})}>{departments.map(d=><option key={d}>{d}</option>)}</select></div>
@@ -142,9 +167,25 @@ function CareersManagement() {
               <div className="admin-detail-item"><div className="detail-label">Status</div><div className="detail-value"><span className={`status-badge ${selectedApp.status}`}>{selectedApp.status}</span></div></div>
               <div className="admin-detail-item"><div className="detail-label">Update Status</div><div className="detail-value"><select value={selectedApp.status} onChange={e=>handleAppStatus(selectedApp._id,e.target.value)} style={{padding:"6px 10px",borderRadius:6,border:"1px solid #ddd"}}>{appStatuses.map(s=><option key={s}>{s}</option>)}</select></div></div>
             </div></div>
-            <div className="admin-modal-footer"><button className="admin-btn admin-btn-danger admin-btn-sm" onClick={()=>handleDeleteApp(selectedApp._id)} style={{display:"flex", alignItems:"center", gap: "6px"}}><FiTrash2 /> Delete</button><button className="admin-btn admin-btn-secondary" onClick={()=>setSelectedApp(null)}>Close</button></div>
+            <div className="admin-modal-footer"><button className="admin-btn admin-btn-danger admin-btn-sm" onClick={()=>handleDeleteClick(selectedApp._id, "application")} style={{display:"flex", alignItems:"center", gap: "6px"}}><FiTrash2 /> Delete</button><button className="admin-btn admin-btn-secondary" onClick={()=>setSelectedApp(null)}>Close</button></div>
           </div></div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={
+          confirmModal.action === "update_career" ? "Confirm Update" :
+          confirmModal.type === "application" ? "Delete Application" : "Delete Position"
+        }
+        message={
+          confirmModal.action === "update_career" ? "Are you sure you want to update this position's details?" :
+          confirmModal.type === "application" ? "Are you sure you want to delete this application?" : "Are you sure you want to delete this position?"
+        }
+        onConfirm={handleConfirmAction}
+        onCancel={() => setConfirmModal({ isOpen: false, id: null, type: null, action: null, data: null })}
+        confirmText={confirmModal.action === "update_career" ? "Update" : "Delete"}
+        intent={confirmModal.action === "update_career" ? "info" : "danger"}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { roomsApi } from "../../api/adminApi";
 import { FiLayers, FiEdit2, FiTrash2 } from "react-icons/fi";
+import ConfirmModal from "./ConfirmModal";
 
 const emptyRoom = { roomType: "", totalInventory: 10, pricePerNight: 0, description: "", isActive: true };
 
@@ -11,6 +12,7 @@ function RoomsManagement() {
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({ ...emptyRoom });
   const [alert, setAlert] = useState(null);
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, action: null, data: null });
 
   const fetchRooms = async () => {
     try {
@@ -48,14 +50,22 @@ function RoomsManagement() {
     setShowForm(true);
   };
 
-  const handleSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
+    if (editId) {
+      setConfirmModal({ isOpen: true, action: "update", data: form });
+    } else {
+      performFormAction(form);
+    }
+  };
+
+  const performFormAction = async (formData) => {
     try {
       if (editId) {
-        await roomsApi.update(editId, form);
+        await roomsApi.update(editId, formData);
         showAlertMsg("Room updated successfully");
       } else {
-        await roomsApi.create(form);
+        await roomsApi.create(formData);
         showAlertMsg("Room created successfully");
       }
       setShowForm(false);
@@ -65,14 +75,27 @@ function RoomsManagement() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this room type?")) return;
-    try {
-      await roomsApi.delete(id);
-      showAlertMsg("Room deleted");
-      fetchRooms();
-    } catch (err) {
-      showAlertMsg(err.response?.data?.message || "Failed to delete", "error");
+  const handleDeleteClick = (id) => {
+    setConfirmModal({ isOpen: true, action: "delete", data: id });
+  };
+
+  const handleConfirmAction = async () => {
+    const { action, data } = confirmModal;
+    if (!action) return;
+
+    if (action === "delete") {
+      try {
+        await roomsApi.delete(data);
+        showAlertMsg("Room deleted");
+        fetchRooms();
+      } catch (err) {
+        showAlertMsg(err.response?.data?.message || "Failed to delete", "error");
+      } finally {
+        setConfirmModal({ isOpen: false, action: null, data: null });
+      }
+    } else if (action === "update") {
+      await performFormAction(data);
+      setConfirmModal({ isOpen: false, action: null, data: null });
     }
   };
 
@@ -132,7 +155,7 @@ function RoomsManagement() {
                     <td>
                       <div className="admin-actions">
                         <button className="admin-btn-icon" title="Edit" onClick={() => openEdit(r)}><FiEdit2 /></button>
-                        <button className="admin-btn-icon" title="Delete" onClick={() => handleDelete(r._id)}><FiTrash2 /></button>
+                        <button className="admin-btn-icon" title="Delete" onClick={() => handleDeleteClick(r._id)}><FiTrash2 /></button>
                       </div>
                     </td>
                   </tr>
@@ -151,7 +174,7 @@ function RoomsManagement() {
               <h3>{editId ? "Edit Room Type" : "Add Room Type"}</h3>
               <button className="admin-modal-close" onClick={() => setShowForm(false)}>×</button>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleFormSubmit}>
               <div className="admin-modal-body">
                 <div className="admin-form-group">
                   <label>Room Type Name</label>
@@ -215,6 +238,16 @@ function RoomsManagement() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.action === "update" ? "Confirm Update" : "Delete Room Type"}
+        message={confirmModal.action === "update" ? "Are you sure you want to update this room's details?" : "Are you sure you want to delete this room type? This action cannot be undone."}
+        onConfirm={handleConfirmAction}
+        onCancel={() => setConfirmModal({ isOpen: false, action: null, data: null })}
+        confirmText={confirmModal.action === "update" ? "Update" : "Delete"}
+        intent={confirmModal.action === "update" ? "info" : "danger"}
+      />
     </div>
   );
 }

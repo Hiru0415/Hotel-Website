@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { bookingsApi } from "../../api/adminApi";
 import { FiCalendar, FiEye, FiCheck, FiX, FiTrash2 } from "react-icons/fi";
+import ConfirmModal from "./ConfirmModal";
 
 function BookingsManagement() {
   const [bookings, setBookings] = useState([]);
@@ -8,6 +9,7 @@ function BookingsManagement() {
   const [selected, setSelected] = useState(null);
   const [filter, setFilter] = useState("all");
   const [alert, setAlert] = useState(null);
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, data: null });
 
   const fetchBookings = async () => {
     try {
@@ -39,8 +41,13 @@ function BookingsManagement() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this booking?")) return;
+  const handleDeleteClick = (id) => {
+    setConfirmModal({ isOpen: true, data: id });
+  };
+
+  const handleConfirmDelete = async () => {
+    const id = confirmModal.data;
+    if (!id) return;
     try {
       await bookingsApi.delete(id);
       showAlert("Booking deleted");
@@ -48,6 +55,8 @@ function BookingsManagement() {
       fetchBookings();
     } catch (err) {
       showAlert(err.response?.data?.message || "Failed to delete", "error");
+    } finally {
+      setConfirmModal({ isOpen: false, data: null });
     }
   };
 
@@ -164,7 +173,7 @@ function BookingsManagement() {
                         <button
                           className="admin-btn-icon"
                           title="Delete"
-                          onClick={() => handleDelete(b._id)}
+                          onClick={() => handleDeleteClick(b._id)}
                         >
                           <FiTrash2 />
                         </button>
@@ -289,6 +298,15 @@ function BookingsManagement() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title="Delete Booking"
+        message="Are you sure you want to delete this booking? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmModal({ isOpen: false, data: null })}
+        confirmText="Delete"
+      />
     </div>
   );
 }
