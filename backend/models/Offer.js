@@ -108,31 +108,28 @@ const offerSchema = new mongoose.Schema(
 );
 
 // Auto-generate slug from title
-offerSchema.pre("save", function (next) {
+offerSchema.pre("save", function () {
   if (this.isModified("title") && !this.slug) {
     this.slug = this.title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
   }
-  next();
 });
 
 // Auto-update status based on dates
-offerSchema.pre("save", function (next) {
+offerSchema.pre("save", function () {
   const now = new Date();
   if (this.validTo < now && this.status === "active") {
     this.status = "expired";
   }
-  next();
 });
 
 // Validation: validTo must be after validFrom
-offerSchema.pre("save", function (next) {
+offerSchema.pre("save", function () {
   if (this.validTo <= this.validFrom) {
-    return next(new Error("End date must be after start date"));
+    throw new Error("End date must be after start date");
   }
-  next();
 });
 
 // Index for filtering

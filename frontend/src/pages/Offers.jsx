@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { offerApi } from "../api/api";
 import "./Offers.css";
 
 import logo from "../assets/logo.png";
 import hero from "../assets/home.png";
 import Footer from "../components/Footer";
-
-const API_BASE_URL = "http://localhost:5000/api/v1";
 
 function OfferCard({ offer, onClick }) {
   const getDiscountText = () => {
@@ -41,15 +39,23 @@ function OfferCard({ offer, onClick }) {
   return (
     <div className="offer-card" onClick={onClick}>
       {offer.imageUrl ? (
-        <img src={offer.imageUrl} alt={offer.title} className="offer-card-image" />
+        <img
+          src={offer.imageUrl}
+          alt={offer.title}
+          className="offer-card-image"
+        />
       ) : (
         <div className="offer-card-image-placeholder">No Image</div>
       )}
 
       <div className="offer-card-body">
         <div className="offer-card-top">
-          <span className="offer-type">{offer.offerType.replaceAll("_", " ")}</span>
-          {offer.isFeatured && <span className="offer-featured-badge">Featured</span>}
+          <span className="offer-type">
+            {offer.offerType.replaceAll("_", " ")}
+          </span>
+          {offer.isFeatured && (
+            <span className="offer-featured-badge">Featured</span>
+          )}
         </div>
 
         <h2>{offer.title}</h2>
@@ -103,7 +109,7 @@ function Offers() {
       if (selectedType) params.offerType = selectedType;
       if (featuredOnly) params.isFeatured = true;
 
-      const response = await axios.get(`${API_BASE_URL}/offers`, { params });
+      const response = await offerApi.getAll(params);
 
       const offerData = response.data?.data;
       setOffers(offerData?.docs || []);
@@ -183,7 +189,11 @@ function Offers() {
             Featured only
           </label>
 
-          <button type="button" className="offers-reset-btn" onClick={handleResetFilters}>
+          <button
+            type="button"
+            className="offers-reset-btn"
+            onClick={handleResetFilters}
+          >
             Reset
           </button>
         </div>

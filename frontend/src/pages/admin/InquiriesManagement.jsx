@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { inquiriesApi } from "../../api/adminApi";
-import { FiMail, FiEye, FiCheck } from "react-icons/fi";
+import { FiMail, FiEye, FiCheck, FiTrash2 } from "react-icons/fi";
 
 function InquiriesManagement() {
   const [inquiries, setInquiries] = useState([]);
@@ -20,7 +20,9 @@ function InquiriesManagement() {
     }
   };
 
-  useEffect(() => { fetchInquiries(); }, []);
+  useEffect(() => {
+    fetchInquiries();
+  }, []);
 
   const showAlert = (msg, type = "success") => {
     setAlert({ msg, type });
@@ -32,7 +34,7 @@ function InquiriesManagement() {
       await inquiriesApi.updateStatus(id, { status });
       showAlert(`Inquiry marked as ${status}`);
       if (selected?._id === id) {
-          setSelected(prev => ({ ...prev, status }));
+        setSelected((prev) => ({ ...prev, status }));
       }
       fetchInquiries();
     } catch (err) {
@@ -40,11 +42,40 @@ function InquiriesManagement() {
     }
   };
 
-  const filtered = filter === "all" ? inquiries : inquiries.filter((inq) => inq.status === filter);
+  const handleDeleteInquiry = async (id) => {
+    const confirmed = window.confirm(
+      "Delete this resolved inquiry? This action cannot be undone.",
+    );
+    if (!confirmed) return;
+
+    try {
+      await inquiriesApi.delete(id);
+      showAlert("Inquiry deleted successfully");
+
+      if (selected?._id === id) {
+        setSelected(null);
+      }
+
+      setInquiries((prev) => prev.filter((inq) => inq._id !== id));
+    } catch (err) {
+      showAlert(
+        err.response?.data?.message || "Failed to delete inquiry",
+        "error",
+      );
+    }
+  };
+
+  const filtered =
+    filter === "all"
+      ? inquiries
+      : inquiries.filter((inq) => inq.status === filter);
 
   if (loading) {
     return (
-      <div className="admin-loading-screen" style={{ height: "50vh", background: "transparent" }}>
+      <div
+        className="admin-loading-screen"
+        style={{ height: "50vh", background: "transparent" }}
+      >
         <div className="admin-spinner" />
       </div>
     );
@@ -53,7 +84,7 @@ function InquiriesManagement() {
   return (
     <div>
       <h1 className="admin-page-title">Contact Inquiries</h1>
-      
+
       {alert && (
         <div className={`admin-alert admin-alert-${alert.type}`}>
           {alert.msg}
@@ -71,7 +102,13 @@ function InquiriesManagement() {
             {f.charAt(0).toUpperCase() + f.slice(1)}
             {f !== "all" && (
               <span style={{ marginLeft: 6, opacity: 0.6 }}>
-                ({inquiries.filter((inq) => (f === "all" ? true : inq.status === f)).length})
+                (
+                {
+                  inquiries.filter((inq) =>
+                    f === "all" ? true : inq.status === f,
+                  ).length
+                }
+                )
               </span>
             )}
           </button>
@@ -100,7 +137,9 @@ function InquiriesManagement() {
                 <tr>
                   <td colSpan="7">
                     <div className="admin-empty-state">
-                      <div className="empty-icon"><FiMail /></div>
+                      <div className="empty-icon">
+                        <FiMail />
+                      </div>
                       <p>No inquiries found</p>
                     </div>
                   </td>
@@ -111,11 +150,20 @@ function InquiriesManagement() {
                     <td style={{ fontWeight: 500 }}>{inq.name}</td>
                     <td>{inq.email}</td>
                     <td>{inq.phone || "—"}</td>
-                    <td style={{ maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <td
+                      style={{
+                        maxWidth: 200,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
                       {inq.message}
                     </td>
                     <td>
-                      <span className={`status-badge ${inq.status || "pending"}`}>
+                      <span
+                        className={`status-badge ${inq.status || "pending"}`}
+                      >
                         {inq.status || "pending"}
                       </span>
                     </td>
@@ -133,7 +181,9 @@ function InquiriesManagement() {
                           <button
                             className="admin-btn-icon"
                             title="Mark as Resolved"
-                            onClick={() => handleStatusChange(inq._id, "resolved")}
+                            onClick={() =>
+                              handleStatusChange(inq._id, "resolved")
+                            }
                             style={{ color: "#4caf50" }}
                           >
                             <FiCheck />
@@ -143,10 +193,22 @@ function InquiriesManagement() {
                           <button
                             className="admin-btn-icon"
                             title="Mark as Reviewed"
-                            onClick={() => handleStatusChange(inq._id, "reviewed")}
+                            onClick={() =>
+                              handleStatusChange(inq._id, "reviewed")
+                            }
                             style={{ color: "#2196F3" }}
                           >
                             <FiEye />
+                          </button>
+                        )}
+                        {inq.status === "resolved" && (
+                          <button
+                            className="admin-btn-icon"
+                            title="Delete Inquiry"
+                            onClick={() => handleDeleteInquiry(inq._id)}
+                            style={{ color: "#f44336" }}
+                          >
+                            <FiTrash2 />
                           </button>
                         )}
                       </div>
@@ -165,7 +227,12 @@ function InquiriesManagement() {
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
               <h3>Inquiry Details</h3>
-              <button className="admin-modal-close" onClick={() => setSelected(null)}>×</button>
+              <button
+                className="admin-modal-close"
+                onClick={() => setSelected(null)}
+              >
+                ×
+              </button>
             </div>
             <div className="admin-modal-body">
               <div className="admin-detail-grid">
@@ -189,7 +256,10 @@ function InquiriesManagement() {
                 </div>
                 <div className="admin-detail-item admin-detail-full">
                   <div className="detail-label">Message</div>
-                  <div className="detail-value" style={{ whiteSpace: "pre-wrap" }}>
+                  <div
+                    className="detail-value"
+                    style={{ whiteSpace: "pre-wrap" }}
+                  >
                     {selected.message}
                   </div>
                 </div>
@@ -197,23 +267,34 @@ function InquiriesManagement() {
             </div>
             <div className="admin-modal-footer">
               {selected.status === "pending" && (
-                  <button
-                    className="admin-btn admin-btn-primary"
-                    onClick={() => handleStatusChange(selected._id, "reviewed")}
-                    style={{ background: "#2196F3", borderColor: "#2196F3" }}
-                  >
-                    Mark Reviewed
-                  </button>
-                )}
-                {selected.status !== "resolved" && (
-                  <button
-                    className="admin-btn admin-btn-primary"
-                    onClick={() => handleStatusChange(selected._id, "resolved")}
-                  >
-                    Mark Resolved
-                  </button>
-                )}
-              <button className="admin-btn admin-btn-secondary" onClick={() => setSelected(null)}>
+                <button
+                  className="admin-btn admin-btn-primary"
+                  onClick={() => handleStatusChange(selected._id, "reviewed")}
+                  style={{ background: "#2196F3", borderColor: "#2196F3" }}
+                >
+                  Mark Reviewed
+                </button>
+              )}
+              {selected.status !== "resolved" && (
+                <button
+                  className="admin-btn admin-btn-primary"
+                  onClick={() => handleStatusChange(selected._id, "resolved")}
+                >
+                  Mark Resolved
+                </button>
+              )}
+              {selected.status === "resolved" && (
+                <button
+                  className="admin-btn admin-btn-danger"
+                  onClick={() => handleDeleteInquiry(selected._id)}
+                >
+                  Delete Inquiry
+                </button>
+              )}
+              <button
+                className="admin-btn admin-btn-secondary"
+                onClick={() => setSelected(null)}
+              >
                 Close
               </button>
             </div>

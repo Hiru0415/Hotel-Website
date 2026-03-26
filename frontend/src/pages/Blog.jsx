@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { blogApi } from "../api/api";
 import "./Blog.css";
 
 import logo from "../assets/logo.png";
 import hero from "../assets/home.png";
 import Footer from "../components/Footer";
-
-const API_BASE_URL = "http://localhost:5000/api/v1";
 
 function BlogCard({ blog, onClick }) {
   return (
@@ -35,7 +33,9 @@ function BlogCard({ blog, onClick }) {
           <span className="blog-category">
             {blog.category?.name || "Uncategorized"}
           </span>
-          {blog.isFeatured && <span className="blog-featured-badge">Featured</span>}
+          {blog.isFeatured && (
+            <span className="blog-featured-badge">Featured</span>
+          )}
         </div>
 
         <h2>{blog.title}</h2>
@@ -72,7 +72,7 @@ function Blog() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/blogs/categories/all`);
+      const response = await blogApi.getCategories();
       setCategories(response.data?.data || []);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
@@ -92,7 +92,7 @@ function Blog() {
       if (selectedCategory) params.category = selectedCategory;
       if (featuredOnly) params.isFeatured = true;
 
-      const response = await axios.get(`${API_BASE_URL}/blogs`, { params });
+      const response = await blogApi.getAll(params);
 
       const blogData = response.data?.data;
       setBlogs(blogData?.docs || []);
@@ -190,7 +190,11 @@ function Blog() {
           </label>
 
           <button type="submit">Search</button>
-          <button type="button" className="reset-btn" onClick={handleResetFilters}>
+          <button
+            type="button"
+            className="reset-btn"
+            onClick={handleResetFilters}
+          >
             Reset
           </button>
         </form>

@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { blogApi } from "../api/api";
 import "./BlogDetails.css";
 
 import logo from "../assets/logo.png";
 import hero from "../assets/home.png";
 import Footer from "../components/Footer";
-
-const API_BASE_URL = "http://localhost:5000/api/v1";
 
 function BlogDetails() {
   const navigate = useNavigate();
@@ -19,7 +17,7 @@ function BlogDetails() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/blogs/${identifier}`);
+        const response = await blogApi.getByIdentifier(identifier);
         setBlog(response.data?.data || null);
       } catch (error) {
         console.error("Failed to fetch blog details:", error);
@@ -71,7 +69,9 @@ function BlogDetails() {
                 src={blog.featuredImageUrl}
                 alt={blog.title}
                 className="blog-details-featured-image"
-                onError={(e) => { e.target.style.display = "none"; }}
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }}
               />
             )}
             <div className="blog-details-meta">
