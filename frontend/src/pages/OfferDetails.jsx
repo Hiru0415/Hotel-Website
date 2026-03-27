@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { offerApi } from "../api/api";
 import "./OfferDetails.css";
 
 import logo from "../assets/logo.png";
 import hero from "../assets/home.png";
 import Footer from "../components/Footer";
-
-const API_BASE_URL = "http://localhost:5000/api/v1";
 
 function OfferDetails() {
   const navigate = useNavigate();
@@ -19,7 +17,7 @@ function OfferDetails() {
   useEffect(() => {
     const fetchOffer = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/offers/${identifier}`);
+        const response = await offerApi.getByIdentifier(identifier);
         setOffer(response.data?.data || null);
       } catch (error) {
         console.error("Failed to fetch offer details:", error);
@@ -153,7 +151,9 @@ function OfferDetails() {
                   {offer.applicableRooms.map((room) => (
                     <div key={room._id} className="offer-details-room-item">
                       <span>{room.roomType}</span>
-                      {room.pricePerNight && <small>LKR {room.pricePerNight}</small>}
+                      {room.pricePerNight && (
+                        <small>LKR {room.pricePerNight}</small>
+                      )}
                     </div>
                   ))}
                 </div>

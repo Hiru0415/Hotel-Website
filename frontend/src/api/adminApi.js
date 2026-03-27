@@ -1,29 +1,6 @@
-import axios from "axios";
+import { adminClient } from "./client";
 
-const adminApi = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1",
-});
-
-// Attach token to every request
-adminApi.interceptors.request.use((config) => {
-  const token = localStorage.getItem("adminToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Handle 401 globally
-adminApi.interceptors.response.use(
-  (res) => res,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("adminToken");
-      window.location.href = "/admin/login";
-    }
-    return Promise.reject(error);
-  },
-);
+const adminApi = adminClient;
 
 // ─── Auth ────────────────────────────────────────
 export const authApi = {
@@ -52,6 +29,7 @@ export const bookingsApi = {
 export const inquiriesApi = {
   getAll: () => adminApi.get("/inquiries"),
   updateStatus: (id, data) => adminApi.put(`/inquiries/${id}/status`, data),
+  delete: (id) => adminApi.delete(`/inquiries/${id}`),
 };
 
 // ─── Meeting Enquiries ───────────────────────────
@@ -69,7 +47,7 @@ export const roomsApi = {
 
 // ─── Offers ──────────────────────────────────────
 export const offersApi = {
-  getAll: () => adminApi.get("/offers"),
+  getAll: (params) => adminApi.get("/offers", { params }),
   getById: (id) => adminApi.get(`/offers/${id}`),
   getStats: () => adminApi.get("/offers/stats/overview"),
   create: (data) => adminApi.post("/offers", data),

@@ -1,7 +1,7 @@
 const express = require("express");
 const { body } = require("express-validator");
 const { validate } = require("../middlewares/validator");
-const { protect } = require("../middlewares/auth");
+const { protect, optionalProtect } = require("../middlewares/auth");
 const {
   getOffers,
   getOfferByIdentifier,
@@ -46,8 +46,8 @@ const validateCodeValidation = [
 
 // Public routes
 router.get("/stats/overview", protect, getOfferStats);
-router.get("/", getOffers);
-router.get("/:identifier", getOfferByIdentifier);
+router.get("/", optionalProtect, getOffers);
+router.get("/:identifier", optionalProtect, getOfferByIdentifier);
 router.post("/validate", validateCodeValidation, validate, validateOfferCode);
 
 // Admin routes

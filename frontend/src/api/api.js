@@ -1,8 +1,6 @@
-import axios from "axios";
+import { publicClient } from "./client";
 
-const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1",
-});
+const apiClient = publicClient;
 
 export const api = {
   createBooking: (payload) => apiClient.post("/bookings", payload),
@@ -14,6 +12,19 @@ export const api = {
   getCareers: () => apiClient.get("/careers"),
   applyToCareer: (careerId, payload) =>
     apiClient.post(`/careers/${careerId}/apply`, payload),
+};
+
+export const blogApi = {
+  getCategories: () => apiClient.get("/blogs/categories/all"),
+  getAll: (params) => apiClient.get("/blogs", { params }),
+  getByIdentifier: (identifier) => apiClient.get(`/blogs/${identifier}`),
+};
+
+export const offerApi = {
+  getAll: (params = {}) =>
+    apiClient.get("/offers", { params: { onlyActive: true, ...params } }),
+  getByIdentifier: (identifier) => apiClient.get(`/offers/${identifier}`),
+  validateCode: (code) => apiClient.post("/offers/validate", { code }),
 };
 
 export default apiClient;

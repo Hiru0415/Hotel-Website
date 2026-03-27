@@ -65,7 +65,7 @@ function AdminDashboard() {
           inquiriesRes,
           meetingRes,
           roomsRes,
-          offersRes,
+          offerStatsRes,
           blogsRes,
           careersRes,
         ] = await Promise.allSettled([
@@ -73,7 +73,7 @@ function AdminDashboard() {
           inquiriesApi.getAll(),
           meetingEnquiriesApi.getAll(),
           roomsApi.getAll(),
-          offersApi.getAll(),
+          offersApi.getStats(),
           blogsApi.getAll(),
           careersApi.getAll(),
         ]);
@@ -88,8 +88,10 @@ function AdminDashboard() {
           meetingRes.status === "fulfilled" ? meetingRes.value.data.data : [];
         const rooms =
           roomsRes.status === "fulfilled" ? roomsRes.value.data.data : [];
-        const offers =
-          offersRes.status === "fulfilled" ? offersRes.value.data.data : [];
+        const offerStats =
+          offerStatsRes.status === "fulfilled"
+            ? offerStatsRes.value.data.data
+            : null;
         const blogs =
           blogsRes.status === "fulfilled"
             ? blogsRes.value.data.data?.docs || blogsRes.value.data.data
@@ -107,9 +109,7 @@ function AdminDashboard() {
           inquiries: Array.isArray(inquiries) ? inquiries.length : 0,
           meetingEnquiries: Array.isArray(meetings) ? meetings.length : 0,
           rooms: Array.isArray(rooms) ? rooms.length : 0,
-          offers: Array.isArray(offers)
-            ? offers.filter((o) => o.status === "active").length
-            : 0,
+          offers: offerStats?.activeOffers || 0,
           blogs: Array.isArray(blogs) ? blogs.length : 0,
           careers: Array.isArray(careers)
             ? careers.filter((c) => c.status === "active").length

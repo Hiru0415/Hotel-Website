@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api } from "../api/api";
 import "./EnquiryForm.css";
 import logo from "../assets/logo.png";
+import PageBackground from "../components/PageBackground";
 
 function EnquiryForm({ onBackToMenu }) {
   const [formData, setFormData] = useState({
@@ -102,7 +103,7 @@ function EnquiryForm({ onBackToMenu }) {
           &#9776;
         </button>
       </header>
-
+<PageBackground overlayOpacity={0.22}>
       <main className="enquiry-main">
         <form className="enquiry-panel" onSubmit={handleSubmit}>
           <h1>Enquiry Form</h1>
@@ -245,7 +246,7 @@ function EnquiryForm({ onBackToMenu }) {
           </div>
         </form>
       </main>
-
+    </PageBackground>
       <footer className="enquiry-footer">
         <div className="enquiry-footer-col enquiry-footer-brand">
           <img src={logo} alt="Logo" className="enquiry-footer-logo" />
